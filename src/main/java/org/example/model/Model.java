@@ -38,6 +38,12 @@ public interface Model {
    */
   boolean isMine(int r, int c);
   
+  /**
+   * Getter method for the state of the cell at row r, column c. Throws an IndexOutOfBounds exception
+   * if r or c is out of bounds.
+   */
+  CellState getCellState(int r, int c);
+  
   /** Getter method for the current active Puzzle instance */
   Puzzle getActivePuzzle();
   
