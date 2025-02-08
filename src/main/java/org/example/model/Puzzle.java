@@ -1,3 +1,5 @@
 package org.example.model;
 
-public interface Puzzle {}
+public interface Puzzle {
+
+}
