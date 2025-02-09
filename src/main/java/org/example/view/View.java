@@ -1,42 +1,53 @@
 package org.example.view;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.example.controller.Controller;
 import org.example.model.Model;
 import org.example.model.ModelObserver;
+
+import static org.example.view.ViewConstants.*;
 
 public class View implements FXComponent, ModelObserver {
   private final Model model;
   private final Controller controller;
   private final Stage stage;
-  
+
   public View(Model model, Controller controller, Stage stage) {
     this.model = model;
     this.controller = controller;
     this.stage = stage;
   }
-  
+
   @Override
   public void update(Model model) {
     Scene scene = new Scene(render());
     scene.getStylesheets().add("main.css");
     stage.setScene(scene);
   }
-  
+
   @Override
   public Parent render() {
-    Pane stackPane = new StackPane();
-    
+    Rectangle2D screen = Screen.getPrimary().getVisualBounds();
     Pane vBox = new VBox();
+    vBox.getStyleClass().add("client");
+    vBox.setMaxHeight(MaxScreenHeight);
+    vBox.setMaxWidth(MaxScreenWidth);
 
-    // vBox.getChildren().add(new ImageView(new Image("mine.png")));
+    vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
+    Mine mine = new Mine(model, 0, 0);
+    vBox.getChildren().add(mine.render());
+    for (int i = 0; i < 13; i++) {
+      vBox.getChildren().add(mine.render());
+    }
 
-    stackPane.getChildren().add(vBox);
-    return stackPane;
+    return vBox;
   }
 }
