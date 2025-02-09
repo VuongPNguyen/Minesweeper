@@ -19,7 +19,7 @@ public interface Controller {
   void clickCell(int r, int c);
   
   /** Handles the right click event on the cell at row r, column c */
-  void flagCell(int r, int c);
+  void toggleFlagCell(int r, int c);
   
   /** Returns true if the BLANK or CLUE cell at row r, column c is revealed */
   boolean isRevealed(int r, int c);

@@ -112,7 +112,7 @@ public class ModelImpl implements Model {
       throw new IndexOutOfBoundsException("Index out of bounds of PuzzleLibrary.");
     }
     this.puzzleIndex = index;
-    notify(this);
+    this.resetPuzzle();
   }
 
   @Override
