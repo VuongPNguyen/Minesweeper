@@ -20,16 +20,4 @@ public interface Controller {
   
   /** Handles the right click event on the cell at row r, column c */
   void toggleFlagCell(int r, int c);
-  
-  /** Returns true if the BLANK or CLUE cell at row r, column c is revealed */
-  boolean isRevealed(int r, int c);
-  
-  /** Returns true if the cell at row r, column c is a mine */
-  boolean isMine(int r, int c);
-
-  /** Returns true if the active puzzle is solved */
-  boolean isSolved();
-  
-  /** Getter method for the active puzzle */
-  Puzzle getActivePuzzle();
 }
