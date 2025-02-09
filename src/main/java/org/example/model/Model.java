@@ -1,6 +1,9 @@
 package org.example.model;
 
 public interface Model {
+  /** TEMP METHOD DELETE LATER */
+  CellState[][] getCellStateMap();
+  
   /**
    * Reveals the cell if not revealed yet in the active puzzle in the cell at row r, column c.
    * Throws an IndexOutOfBoundsException if r or c is out of bounds.
@@ -61,6 +64,9 @@ public interface Model {
   
   /** Resets the active puzzle by removing all lamps which have been placed */
   void resetPuzzle();
+  
+  /** Getter method for number of cells required to reveal to win. */
+  int getRevealTarget();
   
   /** Returns true if the active puzzle is solved (i.e. every non-mine cell is revealed) */
   boolean isSolved();

@@ -7,6 +7,7 @@ public class ModelImpl implements Model {
   private final PuzzleLibrary puzzleLibrary;
   private int puzzleIndex = 0;
   private CellState[][] cellStateMap;
+  private int revealTarget;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
 
   public ModelImpl(PuzzleLibrary puzzleLibrary) {
@@ -15,6 +16,12 @@ public class ModelImpl implements Model {
     }
     this.puzzleLibrary = puzzleLibrary;
     this.resetPuzzle();
+  }
+  
+  // TEMP METHOD DELETE LATER
+  @Override
+  public CellState[][] getCellStateMap() {
+    return cellStateMap;
   }
   
   public void checkIndexInBounds(int r, int c) {
@@ -28,8 +35,21 @@ public class ModelImpl implements Model {
   @Override
   public void revealCell(int r, int c) {
     checkIndexInBounds(r, c);
-    if (cellStateMap[r][c] == CellState.HIDDEN) {
-      cellStateMap[r][c] = CellState.REVEALED;
+    if (cellStateMap[r][c] == CellState.HIDE) {
+      cellStateMap[r][c] = CellState.SHOW;
+      if (!this.isMine(r, c)) {
+        revealTarget--;
+      }
+      Puzzle activePuzzle = this.getActivePuzzle();
+      if (activePuzzle.getCellType(r, c) == CellType.BLANK) {
+        for (int row = r - 1; row <= r + 1; row++) {
+          for (int col = c - 1; col <= c + 1; col++) {
+            if (row >= 0 && row < activePuzzle.getHeight() && col >=0 && col < activePuzzle.getWidth()) {
+              revealCell(row, col);
+            }
+          }
+        }
+      }
       notify(this);
     }
   }
@@ -37,8 +57,8 @@ public class ModelImpl implements Model {
   @Override
   public void addFlag(int r, int c) {
     checkIndexInBounds(r, c);
-    if (this.getCellState(r, c) == CellState.HIDDEN) {
-      cellStateMap[r][c] = CellState.FLAGGED;
+    if (this.getCellState(r, c) == CellState.HIDE) {
+      cellStateMap[r][c] = CellState.FLAG;
       notify(this);
     }
   }
@@ -46,8 +66,8 @@ public class ModelImpl implements Model {
   @Override
   public void removeFlag(int r, int c) {
     checkIndexInBounds(r, c);
-    if (this.getCellState(r, c) == CellState.FLAGGED) {
-      cellStateMap[r][c] = CellState.HIDDEN;
+    if (this.isFlag(r, c)) {
+      cellStateMap[r][c] = CellState.HIDE;
       notify(this);
     }
   }
@@ -55,13 +75,13 @@ public class ModelImpl implements Model {
   @Override
   public boolean isRevealed(int r, int c) {
     checkIndexInBounds(r, c);
-    return this.getCellState(r, c) == CellState.REVEALED;
+    return this.getCellState(r, c) == CellState.SHOW;
   }
 
   @Override
   public boolean isFlag(int r, int c) {
     checkIndexInBounds(r, c);
-    return this.getCellState(r, c) == CellState.FLAGGED;
+    return this.getCellState(r, c) == CellState.FLAG;
   }
 
   @Override
@@ -92,28 +112,39 @@ public class ModelImpl implements Model {
       throw new IndexOutOfBoundsException("Index out of bounds of PuzzleLibrary.");
     }
     this.puzzleIndex = index;
+    notify(this);
   }
 
   @Override
   public int getPuzzleLibrarySize() {
     return puzzleLibrary.size();
   }
-
+  
   @Override
   public void resetPuzzle() {
+    revealTarget = 0;
     int puzzleHeight = this.getActivePuzzle().getHeight();
     int puzzleWidth = this.getActivePuzzle().getWidth();
     cellStateMap = new CellState[puzzleHeight][puzzleWidth];
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
-        cellStateMap[r][c] = CellState.HIDDEN;
+        cellStateMap[r][c] = CellState.HIDE;
+        if (!this.isMine(r, c)) {
+          revealTarget++;
+        }
       }
     }
+    notify(this);
+  }
+  
+  @Override
+  public int getRevealTarget() {
+    return revealTarget;
   }
 
   @Override
   public boolean isSolved() {
-    return false;
+    return revealTarget == 0;
   }
 
   @Override
