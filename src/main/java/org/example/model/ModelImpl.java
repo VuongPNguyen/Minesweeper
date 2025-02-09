@@ -14,23 +14,14 @@ public class ModelImpl implements Model {
       throw new IllegalArgumentException("PuzzleLibrary is null");
     }
     this.puzzleLibrary = puzzleLibrary;
-
-    // Game State Map Setup
-    int puzzleHeight = this.getActivePuzzle().getHeight();
-    int puzzleWidth = this.getActivePuzzle().getWidth();
-    cellStateMap = new CellState[puzzleHeight][puzzleWidth];
-    for (int r = 0; r < puzzleHeight; r++) {
-      for (int c = 0; c < puzzleWidth; c++) {
-        cellStateMap[r][c] = CellState.HIDDEN;
-      }
-    }
+    this.resetPuzzle();
   }
   
   public void checkIndexInBounds(int r, int c) {
     int puzzleHeight = this.getActivePuzzle().getHeight();
     int puzzleWidth = this.getActivePuzzle().getWidth();
     if (r < 0 || r >= puzzleHeight || c < 0 || c >= puzzleWidth) {
-      throw new IllegalArgumentException("Index is out of bounds of puzzle.");
+      throw new IndexOutOfBoundsException("Index is out of bounds of puzzle.");
     }
   }
 

@@ -9,6 +9,11 @@ public class PuzzleLibraryImpl implements PuzzleLibrary {
     this.puzzleList = new ArrayList<>();
   }
   
+  public PuzzleLibraryImpl(Puzzle puzzle) {
+    this();
+    this.puzzleList.add(puzzle);
+  }
+  
   @Override
   public void addPuzzle(Puzzle puzzle) {
     if (puzzle == null) {

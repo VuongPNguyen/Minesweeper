@@ -10,7 +10,8 @@ import java.sql.Array;
 
 public class AppTest {
   private Puzzle puzzle = new PuzzleImpl(PUZZLE_01);
-
+  private PuzzleLibrary puzzleLibrary = new PuzzleLibraryImpl(puzzle);
+  
   @Test
   public void testPuzzleImplCheckIndex() {
     boolean check1 = false, check2 = false, check3 = true;
@@ -64,5 +65,69 @@ public class AppTest {
     assertEquals(6, puzzle.getClue(0, 0));
     assertEquals(7, puzzle.getClue(0, 1));
     assertEquals(8, puzzle.getClue(0, 2));
+  }
+  
+  private Model createTestModel(int[][] primitivePuzzle) {
+    Puzzle testPuzzle = new PuzzleImpl(primitivePuzzle);
+    PuzzleLibrary testPuzzleLibrary = new PuzzleLibraryImpl(testPuzzle);
+    return new ModelImpl(testPuzzleLibrary);
+  }
+  
+  @Test
+  public void testModelCheckIndex() {
+    Model model = createTestModel(PUZZLE_01);
+    boolean check1 = false;
+    try {
+      model.revealCell(-1, 100);
+    } catch (IndexOutOfBoundsException ignored) {
+      check1 = true;
+    }
+    assertTrue(check1);
+  }
+  
+  @Test
+  public void testModelRevealCell() {
+    Model model = createTestModel(PUZZLE_01);
+    assertEquals(CellState.HIDDEN, model.getCellState(0, 0));
+    model.revealCell(0, 0);
+    assertEquals(CellState.REVEALED, model.getCellState(0, 0));
+  }
+  
+  @Test
+  public void testModelFlags() {
+    Model model = createTestModel(PUZZLE_01);
+    assertFalse(model.isFlag(0, 0));
+    model.removeFlag(0, 0);
+    assertFalse(model.isFlag(0, 0));
+    model.addFlag(0, 0);
+    assertTrue(model.isFlag(0, 0));
+    model.addFlag(0, 0);
+    assertTrue(model.isFlag(0, 0));
+    model.removeFlag(0, 0);
+    assertFalse(model.isFlag(0, 0));
+    // Testing flagging a revealed cell.
+    assertEquals(CellState.HIDDEN, model.getCellState(0, 0));
+    model.revealCell(0, 0);
+    model.addFlag(0, 0);
+    assertEquals(CellState.REVEALED, model.getCellState(0, 0));
+  }
+  
+  @Test
+  public void testModelResetPuzzle() {
+    Model model = createTestModel(PUZZLE_01);
+    int puzzleHeight = model.getActivePuzzle().getHeight();
+    int puzzleWidth = model.getActivePuzzle().getWidth();
+    for (int r = 0; r < puzzleHeight; r++) {
+      for (int c = 0; c < puzzleWidth; c++) {
+        model.revealCell(r, c);
+        assertEquals(CellState.REVEALED, model.getCellState(r, c));
+      }
+    }
+    model.resetPuzzle();
+    for (int r = 0; r < puzzleHeight; r++) {
+      for (int c = 0; c < puzzleWidth; c++) {
+        assertEquals(CellState.HIDDEN, model.getCellState(r, c));
+      }
+    }
   }
 }
