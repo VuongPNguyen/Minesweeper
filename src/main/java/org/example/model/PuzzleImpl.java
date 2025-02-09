@@ -1,7 +1,7 @@
 package org.example.model;
 
 public class PuzzleImpl implements Puzzle {
-  private int[][] board;
+  private final int[][] board;
   
   public PuzzleImpl(int[][] board) {
     if (board == null) {
