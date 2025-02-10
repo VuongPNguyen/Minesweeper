@@ -1,7 +1,11 @@
 .client {
-  -fx-alignment: center
+  -fx-alignment: center;
 }
 
 .cell {
+  -fx-background-color: lavender;
+  -fx-font-weight: bold;
+}
 
+.grid {
 }

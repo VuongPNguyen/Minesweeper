@@ -18,7 +18,6 @@ public class AppLauncher extends Application {
     puzzleLibrary.addPuzzle(new PuzzleImpl(PUZZLE_03));
 
     Model model = new ModelImpl(puzzleLibrary);
-    model.setActivePuzzleIndex(1);
     Controller controller = new ControllerImpl(model);
     View view = new View(model, controller, stage);
 
@@ -29,8 +28,9 @@ public class AppLauncher extends Application {
     stage.setScene(scene);
     stage.getIcons().add(new Image("mine.png"));
     stage.setTitle("Minesweeper");
+
     stage.show();
-    stage.setY(stage.getY() + 2);
+    // stage.setY(stage.getY() + 2);
     stage.setMaximized(true);
   }
 }

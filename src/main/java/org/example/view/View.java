@@ -44,9 +44,10 @@ public class View implements FXComponent, ModelObserver {
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
     Mine mine = new Mine(model, 0, 0);
     vBox.getChildren().add(mine.render());
-    for (int i = 0; i < 13; i++) {
-      vBox.getChildren().add(mine.render());
-    }
+    Clue clue = new Clue(model, 4, 1);
+    vBox.getChildren().add(clue.render());
+    Blank blank = new Blank(model, 0, 0);
+    vBox.getChildren().add(blank.render());
 
     return vBox;
   }
