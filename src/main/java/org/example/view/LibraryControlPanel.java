@@ -22,14 +22,14 @@ public class LibraryControlPanel implements FXComponent {
     hBox.getStyleClass().add("control-panel");
 
     Button prevPuzzleButton = new Button("←");
-    prevPuzzleButton.setOnAction(e -> controller.clickPrevPuzzle());
+    prevPuzzleButton.setOnAction(_ -> controller.clickPrevPuzzle());
 
     Label puzzleLabel =
         new Label(
             "Puzzle " + (model.getActivePuzzleIndex() + 1) + " of " + model.getPuzzleLibrarySize());
 
     Button nextPuzzleButton = new Button("→");
-    nextPuzzleButton.setOnAction(e -> controller.clickNextPuzzle());
+    nextPuzzleButton.setOnAction(_ -> controller.clickNextPuzzle());
 
     hBox.getChildren().add(prevPuzzleButton);
     hBox.getChildren().add(puzzleLabel);
