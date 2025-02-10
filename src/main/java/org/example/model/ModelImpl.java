@@ -17,7 +17,7 @@ public class ModelImpl implements Model {
     this.puzzleLibrary = puzzleLibrary;
     this.resetPuzzle();
   }
-  
+
   public void checkIndexInBounds(int r, int c) {
     int puzzleHeight = this.getActivePuzzle().getHeight();
     int puzzleWidth = this.getActivePuzzle().getWidth();
@@ -36,16 +36,33 @@ public class ModelImpl implements Model {
       }
       Puzzle activePuzzle = this.getActivePuzzle();
       if (activePuzzle.getCellType(r, c) == CellType.BLANK) {
-        for (int row = r - 1; row <= r + 1; row++) {
-          for (int col = c - 1; col <= c + 1; col++) {
-            if (row >= 0 && row < activePuzzle.getHeight() && col >=0 && col < activePuzzle.getWidth()) {
-              revealCell(row, col);
-            }
+        this.revealBlankAlgorithm(r, c);
+      } else {
+        notify(this);
+      }
+    }
+  }
+
+  @Override
+  public void revealBlankAlgorithm(int r, int c) {
+    Puzzle activePuzzle = this.getActivePuzzle();
+    if (activePuzzle.getCellType(r, c) != CellType.BLANK) {
+      throw new IllegalArgumentException("This cell is not blank.");
+    }
+
+    for (int row = r - 1; row <= r + 1; row++) {
+      for (int col = c - 1; col <= c + 1; col++) {
+        if (row != r || col != c) {
+          try {
+            revealCell(row, col);
+          } catch (IndexOutOfBoundsException ignored) {
+          } catch (Exception e) {
+            throw new RuntimeException("Blank reveal algorithm failure.");
           }
         }
       }
-      notify(this);
     }
+    notify(this);
   }
 
   @Override
@@ -113,7 +130,7 @@ public class ModelImpl implements Model {
   public int getPuzzleLibrarySize() {
     return puzzleLibrary.size();
   }
-  
+
   @Override
   public void resetPuzzle() {
     revealTarget = 0;
@@ -130,7 +147,7 @@ public class ModelImpl implements Model {
     }
     notify(this);
   }
-  
+
   @Override
   public int getRevealTarget() {
     return revealTarget;

@@ -8,6 +8,11 @@ public interface Model {
   void revealCell(int r, int c);
   
   /**
+   * Reveals all adjacent cells if the initial cell is a BLANK.
+   */
+  void revealBlankAlgorithm(int r, int c);
+  
+  /**
    * Adds a flag if one doesn't already exist to the active puzzle in the cell at row r, column c.
    * Throws an IndexOutOfBoundsException if r or c is out of bounds.
    */
