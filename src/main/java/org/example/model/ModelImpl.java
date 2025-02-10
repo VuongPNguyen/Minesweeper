@@ -49,7 +49,7 @@ public class ModelImpl implements Model {
       }
       this.updateGameState();
       if (rootCell) {
-        notify(this);
+        notify(this, RenderType.CHANGE_CELL_STATE);
       }
     }
   }
@@ -91,7 +91,7 @@ public class ModelImpl implements Model {
     }
     if (this.getCellState(r, c) == CellState.HIDE) {
       cellStateMap[r][c] = CellState.FLAG;
-      notify(this);
+      notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
 
@@ -103,7 +103,7 @@ public class ModelImpl implements Model {
     }
     if (this.isFlag(r, c)) {
       cellStateMap[r][c] = CellState.HIDE;
-      notify(this);
+      notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
 

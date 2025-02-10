@@ -38,7 +38,7 @@ public class View implements FXComponent, ModelObserver {
     stage.setScene(scene);
     stage.setMaximized(true);
   }
-  
+
   public void update(Model model, RenderType renderType) {
     Scene scene = new Scene(this.render(renderType));
     scene.getStylesheets().add("main.css");
@@ -72,38 +72,50 @@ public class View implements FXComponent, ModelObserver {
 
     return vBox;
   }
-  
+
   public Parent render(RenderType renderType) {
     Pane vBox = new VBox();
     vBox.getStyleClass().add("client");
     vBox.setMaxHeight(MaxScreenHeight);
     vBox.setMaxWidth(MaxScreenWidth);
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
-    
-    vBox.getChildren().add(libraryControlPanel);
-    vBox.getChildren().add(puzzleControlPanel);
-    
+
     switch (renderType) {
       case NEW_PUZZLE -> {
+        // Re-render
         libraryControlPanel = new LibraryControlPanel(model, controller).render();
-        
+        vBox.getChildren().add(libraryControlPanel);
+        vBox.getChildren().add(puzzleControlPanel);
+
         puzzleArea = new StackPane();
+
+        Runnable renderPlayGrid = () -> playGrid = new PlayGrid(model, controller).render();
         
+        Thread playGridThread = new Thread(renderPlayGrid);
+        playGridThread.start();
+
         puzzleGrid = new PuzzleGrid(model).render();
         puzzleArea.getChildren().add(puzzleGrid);
-        
-        playGrid = new PlayGrid(model, controller).render();
+
+        try {
+          playGridThread.join();
+        } catch (InterruptedException e) {
+          throw new RuntimeException("playGridThread interrupted");
+        }
         puzzleArea.getChildren().add(playGrid);
-        
+
         vBox.getChildren().add(puzzleArea);
-        
+
         return vBox;
       }
-      case RESET_PUZZLE -> {
+      case CHANGE_CELL_STATE -> {
+        vBox.getChildren().add(libraryControlPanel);
+        vBox.getChildren().add(puzzleControlPanel);
+        
         puzzleArea = new StackPane();
         
         puzzleArea.getChildren().add(puzzleGrid);
-
+        
         playGrid = new PlayGrid(model, controller).render();
         puzzleArea.getChildren().add(playGrid);
         
@@ -112,7 +124,7 @@ public class View implements FXComponent, ModelObserver {
         return vBox;
       }
     }
-    
+
     return vBox;
   }
 }
