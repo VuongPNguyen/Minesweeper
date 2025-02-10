@@ -2,6 +2,10 @@
   -fx-alignment: center;
 }
 
+.control-panel {
+  -fx-alignment: center;
+}
+
 .cell {
   -fx-alignment: center;
   -fx-background-color: lavender;
@@ -21,6 +25,11 @@
 .show {
   -fx-alignment: center;
   -fx-background-color: transparent;
+}
+
+.play-cell {
+  -fx-alignment: center;
+  -fx-background-color: lightslategray;
 }
 
 .grid {

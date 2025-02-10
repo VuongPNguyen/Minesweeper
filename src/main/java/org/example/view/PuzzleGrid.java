@@ -1,12 +1,12 @@
 package org.example.view;
 
+import static org.example.view.ViewConstants.*;
+
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import org.example.model.CellType;
 import org.example.model.Model;
 import org.example.model.Puzzle;
-
-import static org.example.view.ViewConstants.*;
 
 public class PuzzleGrid implements FXComponent {
   private final Model model;
@@ -21,7 +21,6 @@ public class PuzzleGrid implements FXComponent {
     grid.getStyleClass().add("grid");
 
     Puzzle activePuzzle = model.getActivePuzzle();
-
     for (int row = 0; row < activePuzzle.getHeight(); row++) {
       for (int col = 0; col < activePuzzle.getWidth(); col++) {
         if (activePuzzle.getCellType(row, col) == CellType.BLANK) {

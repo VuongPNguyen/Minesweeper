@@ -1,14 +1,13 @@
 package org.example.view;
 
+import static org.example.view.ViewConstants.*;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.example.controller.Controller;
 import org.example.model.*;
-
-import static org.example.view.ViewConstants.*;
 
 public class View implements FXComponent, ModelObserver {
   private final Model model;
@@ -23,7 +22,7 @@ public class View implements FXComponent, ModelObserver {
 
   @Override
   public void update(Model model) {
-    Scene scene = new Scene(render());
+    Scene scene = new Scene(this.render());
     scene.getStylesheets().add("main.css");
     stage.setScene(scene);
   }
@@ -35,15 +34,14 @@ public class View implements FXComponent, ModelObserver {
     vBox.setMaxHeight(MaxScreenHeight);
     vBox.setMaxWidth(MaxScreenWidth);
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
+    
+    LibraryControlPanel libraryControlPanel = new LibraryControlPanel(model, controller);
 
-    Label label = new Label(String.valueOf(model.getRevealTarget()));
-
-    if (model.getGameState() == GameState.LOSE) {
-      label = new Label("LOSE");
-    } else if (model.getGameState() == GameState.WIN) {
-      label = new Label("WIN");
-    }
-
+    /** USE LATER
+     * if (model.getGameState() == GameState.LOSE) { } else if (model.getGameState() ==
+     * GameState.WIN) { }
+     */
+    
     StackPane puzzleArea = new StackPane();
 
     PuzzleGrid puzzleGrid = new PuzzleGrid(model);
@@ -52,7 +50,7 @@ public class View implements FXComponent, ModelObserver {
     PlayGrid playGrid = new PlayGrid(model, controller);
     puzzleArea.getChildren().add(playGrid.render());
 
-    vBox.getChildren().add(label);
+    vBox.getChildren().add(libraryControlPanel.render());
     vBox.getChildren().add(puzzleArea);
 
     return vBox;
