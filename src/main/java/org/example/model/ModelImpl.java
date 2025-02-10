@@ -31,7 +31,7 @@ public class ModelImpl implements Model {
   @Override
   public void revealCell(int r, int c, boolean rootCell) {
     checkIndexInBounds(r, c);
-    if (getGameState() == GameState.LOSE) {
+    if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
       return;
     }
     if (cellStateMap[r][c] == CellState.HIDE) {
@@ -86,6 +86,9 @@ public class ModelImpl implements Model {
   @Override
   public void addFlag(int r, int c) {
     checkIndexInBounds(r, c);
+    if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
+      return;
+    }
     if (this.getCellState(r, c) == CellState.HIDE) {
       cellStateMap[r][c] = CellState.FLAG;
       notify(this);
@@ -95,6 +98,9 @@ public class ModelImpl implements Model {
   @Override
   public void removeFlag(int r, int c) {
     checkIndexInBounds(r, c);
+    if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
+      return;
+    }
     if (this.isFlag(r, c)) {
       cellStateMap[r][c] = CellState.HIDE;
       notify(this);

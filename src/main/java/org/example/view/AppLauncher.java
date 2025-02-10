@@ -31,7 +31,6 @@ public class AppLauncher extends Application {
     stage.setTitle("Minesweeper");
 
     stage.show();
-    stage.setY(stage.getY() + 2);
     stage.setMaximized(true);
   }
 }
