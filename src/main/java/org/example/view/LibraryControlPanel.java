@@ -23,7 +23,7 @@ public class LibraryControlPanel implements FXComponent {
 
     Button prevPuzzleButton = new Button("←");
     prevPuzzleButton.setOnAction(_ -> controller.clickPrevPuzzle());
-
+    
     Label puzzleLabel =
         new Label(
             "Puzzle " + (model.getActivePuzzleIndex() + 1) + " of " + model.getPuzzleLibrarySize());
@@ -34,6 +34,7 @@ public class LibraryControlPanel implements FXComponent {
     hBox.getChildren().add(prevPuzzleButton);
     hBox.getChildren().add(puzzleLabel);
     hBox.getChildren().add(nextPuzzleButton);
+    
     return hBox;
   }
 }

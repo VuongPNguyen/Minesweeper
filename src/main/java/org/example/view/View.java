@@ -49,9 +49,12 @@ public class View implements FXComponent, ModelObserver {
 
     PlayGrid playGrid = new PlayGrid(model, controller);
     puzzleArea.getChildren().add(playGrid.render());
+    
+    PuzzleControlPanel puzzleControlPanel = new PuzzleControlPanel(model, controller);
 
     vBox.getChildren().add(libraryControlPanel.render());
     vBox.getChildren().add(puzzleArea);
+    vBox.getChildren().add(puzzleControlPanel.render());
 
     return vBox;
   }

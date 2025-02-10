@@ -7,7 +7,7 @@ import org.example.model.CellState;
 import org.example.model.Model;
 import org.example.model.Puzzle;
 
-import static org.example.view.ViewConstants.gridGap;
+import static org.example.view.ViewConstants.*;
 
 public class PlayGrid implements FXComponent {
   private final Model model;
@@ -22,6 +22,7 @@ public class PlayGrid implements FXComponent {
   public Parent render() {
     GridPane grid = new GridPane();
     grid.getStyleClass().add("play-grid");
+    grid.setMaxHeight(MaxScreenHeight);
 
     Puzzle activePuzzle = model.getActivePuzzle();
 
@@ -41,6 +42,7 @@ public class PlayGrid implements FXComponent {
     }
     grid.setHgap(gridGap);
     grid.setVgap(gridGap);
+    grid.setGridLinesVisible(true);
 
     return grid;
   }
