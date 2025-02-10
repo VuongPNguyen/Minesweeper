@@ -31,12 +31,15 @@ public class ModelImpl implements Model {
   @Override
   public void revealCell(int r, int c, boolean rootCell) {
     checkIndexInBounds(r, c);
+    if (getGameState() == GameState.LOSE) {
+      return;
+    }
     if (cellStateMap[r][c] == CellState.HIDE) {
       cellStateMap[r][c] = CellState.SHOW;
       if (this.isMine(r, c)) {
-        setGameState(GameState.LOSE);
         revealAllMines();
         setExplodedMine(new int[] {r, c});
+        setGameState(GameState.LOSE);
       } else {
         revealTarget--;
       }

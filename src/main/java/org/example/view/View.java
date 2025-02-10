@@ -25,6 +25,7 @@ public class View implements FXComponent, ModelObserver {
     Scene scene = new Scene(this.render());
     scene.getStylesheets().add("main.css");
     stage.setScene(scene);
+    stage.setMaximized(true);
   }
 
   @Override
@@ -53,8 +54,8 @@ public class View implements FXComponent, ModelObserver {
     PuzzleControlPanel puzzleControlPanel = new PuzzleControlPanel(model, controller);
 
     vBox.getChildren().add(libraryControlPanel.render());
-    vBox.getChildren().add(puzzleArea);
     vBox.getChildren().add(puzzleControlPanel.render());
+    vBox.getChildren().add(puzzleArea);
 
     return vBox;
   }
