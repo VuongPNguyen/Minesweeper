@@ -8,12 +8,9 @@ import org.example.model.Model;
 
 public class Blank implements FXComponent {
   private final Model model;
-  private final int row, col;
 
-  public Blank(Model model, int row, int col) {
+  public Blank(Model model) {
     this.model = model;
-    this.row = row;
-    this.col = col;
   }
 
   @Override

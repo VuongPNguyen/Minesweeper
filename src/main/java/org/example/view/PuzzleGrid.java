@@ -22,15 +22,15 @@ public class PuzzleGrid implements FXComponent {
 
     Puzzle activePuzzle = model.getActivePuzzle();
 
-    for(int row = 0; row < activePuzzle.getHeight(); row++) {
+    for (int row = 0; row < activePuzzle.getHeight(); row++) {
       for (int col = 0; col < activePuzzle.getWidth(); col++) {
         if (activePuzzle.getCellType(row, col) == CellType.BLANK) {
-          Blank blank = new Blank(model, row, col);
+          Blank blank = new Blank(model);
           grid.add(blank.render(), col, row);
         } else if (activePuzzle.getCellType(row, col) == CellType.CLUE) {
           Clue clue = new Clue(model, row, col);
           grid.add(clue.render(), col, row);
-        } else if(activePuzzle.getCellType(row, col) == CellType.MINE) {
+        } else if (activePuzzle.getCellType(row, col) == CellType.MINE) {
           Mine mine = new Mine(model, row, col);
           grid.add(mine.render(), col, row);
         }

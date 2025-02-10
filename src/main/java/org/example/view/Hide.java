@@ -32,13 +32,14 @@ public class Hide implements FXComponent {
     background.setMinSize(cellSize, cellSize);
     background.setMaxSize(cellSize, cellSize);
 
-    background.setOnMouseClicked(e -> {
-      if (e.getButton() == MouseButton.PRIMARY) {
-        controller.clickCell(row, col);
-      } else if (e.getButton() == MouseButton.SECONDARY) {
-        controller.toggleFlagCell(row, col);
-      }
-    });
+    background.setOnMouseClicked(
+        e -> {
+          if (e.getButton() == MouseButton.PRIMARY) {
+            controller.clickCell(row, col);
+          } else if (e.getButton() == MouseButton.SECONDARY) {
+            controller.toggleFlagCell(row, col);
+          }
+        });
 
     return background;
   }

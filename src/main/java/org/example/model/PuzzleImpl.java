@@ -2,30 +2,30 @@ package org.example.model;
 
 public class PuzzleImpl implements Puzzle {
   private final int[][] board;
-  
+
   public PuzzleImpl(int[][] board) {
     if (board == null) {
       throw new IllegalArgumentException("Board cannot be null.");
     }
     this.board = board;
   }
-  
+
   @Override
   public int getWidth() {
     return board[0].length;
   }
-  
+
   @Override
   public int getHeight() {
     return board.length;
   }
-  
+
   private void checkIndexInBounds(int r, int c) {
     if (r < 0 || r >= this.getHeight() || c < 0 || c >= this.getWidth()) {
       throw new IndexOutOfBoundsException("Index is out of bounds for puzzle.");
     }
   }
-  
+
   @Override
   public CellType getCellType(int r, int c) {
     this.checkIndexInBounds(r, c);
@@ -40,7 +40,7 @@ public class PuzzleImpl implements Puzzle {
       return CellType.ERROR;
     }
   }
-  
+
   @Override
   public int getClue(int r, int c) {
     this.checkIndexInBounds(r, c);

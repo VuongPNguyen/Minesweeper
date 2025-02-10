@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class PuzzleLibraryImpl implements PuzzleLibrary {
   ArrayList<Puzzle> puzzleList;
-  
+
   public PuzzleLibraryImpl() {
     this.puzzleList = new ArrayList<>();
   }
-  
+
   public PuzzleLibraryImpl(Puzzle puzzle) {
     this();
     this.puzzleList.add(puzzle);
   }
-  
+
   @Override
   public void addPuzzle(Puzzle puzzle) {
     if (puzzle == null) {
@@ -21,7 +21,7 @@ public class PuzzleLibraryImpl implements PuzzleLibrary {
     }
     puzzleList.add(puzzle);
   }
-  
+
   @Override
   public Puzzle getPuzzle(int index) {
     if (index >= this.size()) {
@@ -29,7 +29,7 @@ public class PuzzleLibraryImpl implements PuzzleLibrary {
     }
     return puzzleList.get(index);
   }
-  
+
   @Override
   public int size() {
     return puzzleList.size();

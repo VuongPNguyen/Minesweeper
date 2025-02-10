@@ -10,7 +10,7 @@ public class ModelImpl implements Model {
   private int revealTarget;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
   private GameState gameState;
-  private int[] explodedMine = new int[]{-1, -1};
+  private int[] explodedMine = new int[] {-1, -1};
 
   public ModelImpl(PuzzleLibrary puzzleLibrary) {
     if (puzzleLibrary == null) {
@@ -36,7 +36,7 @@ public class ModelImpl implements Model {
       if (this.isMine(r, c)) {
         setGameState(GameState.LOSE);
         revealAllMines();
-        setExplodedMine(new int[]{r, c});
+        setExplodedMine(new int[] {r, c});
       } else {
         revealTarget--;
       }
@@ -79,7 +79,7 @@ public class ModelImpl implements Model {
       }
     }
   }
-  
+
   @Override
   public void addFlag(int r, int c) {
     checkIndexInBounds(r, c);
@@ -203,11 +203,11 @@ public class ModelImpl implements Model {
       o.update(model);
     }
   }
-  
+
   public int[] getExplodedMine() {
     return explodedMine;
   }
-  
+
   public void setExplodedMine(int[] coordinates) {
     this.explodedMine = coordinates;
   }

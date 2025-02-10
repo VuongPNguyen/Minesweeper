@@ -40,13 +40,13 @@ public class View implements FXComponent, ModelObserver {
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
 
     Label label = new Label(String.valueOf(model.getRevealTarget()));
-    
+
     if (model.getGameState() == GameState.LOSE) {
       label = new Label("LOSE");
     } else if (model.getGameState() == GameState.WIN) {
       label = new Label("WIN");
     }
-    
+
     StackPane puzzleArea = new StackPane();
 
     PuzzleGrid puzzleGrid = new PuzzleGrid(model);
@@ -54,8 +54,6 @@ public class View implements FXComponent, ModelObserver {
 
     PlayGrid playGrid = new PlayGrid(model, controller);
     puzzleArea.getChildren().add(playGrid.render());
-
-    
 
     vBox.getChildren().add(label);
     vBox.getChildren().add(puzzleArea);

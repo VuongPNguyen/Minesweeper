@@ -8,5 +8,5 @@ public class ViewConstants {
   public static double MaxScreenHeight = screen.getHeight() - 32;
   public static double MaxScreenWidth = screen.getWidth() - 2;
 
-  public static double gridGap = 2; //2
+  public static double gridGap = 2; // 2
 }

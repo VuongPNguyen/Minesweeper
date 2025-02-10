@@ -34,17 +34,18 @@ public class Flag implements FXComponent {
     cellSize -= gridGap + gridGap / Math.min(puzzleHeight, puzzleWidth);
     background.setMinSize(cellSize, cellSize);
     background.setMaxSize(cellSize, cellSize);
-    
+
     ImageView flagImage = new ImageView(new Image("flag.png"));
     flagImage.setFitWidth(cellSize - 10);
     flagImage.setFitHeight(cellSize - 10);
     background.getChildren().add(flagImage);
 
-    background.setOnMouseClicked(e -> {
-      if (e.getButton() == MouseButton.SECONDARY) {
-        controller.toggleFlagCell(row, col);
-      }
-    });
+    background.setOnMouseClicked(
+        e -> {
+          if (e.getButton() == MouseButton.SECONDARY) {
+            controller.toggleFlagCell(row, col);
+          }
+        });
 
     return background;
   }

@@ -25,7 +25,7 @@ public class AppLauncher extends Application {
     model.addObserver(view);
     Scene scene = new Scene(view.render());
     scene.getStylesheets().add("main.css");
-    
+
     stage.setScene(scene);
     stage.getIcons().add(new Image("mine.png"));
     stage.setTitle("Minesweeper");

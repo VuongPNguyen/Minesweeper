@@ -26,7 +26,7 @@ public class PlayGrid implements FXComponent {
 
     Puzzle activePuzzle = model.getActivePuzzle();
 
-    for(int row = 0; row < activePuzzle.getHeight(); row++) {
+    for (int row = 0; row < activePuzzle.getHeight(); row++) {
       for (int col = 0; col < activePuzzle.getWidth(); col++) {
         if (model.getCellState(row, col) == CellState.HIDE) {
           Hide hide = new Hide(model, controller, row, col);
@@ -35,7 +35,7 @@ public class PlayGrid implements FXComponent {
           Flag flag = new Flag(model, controller, row, col);
           grid.add(flag.render(), col, row);
         } else if (model.getCellState(row, col) == CellState.SHOW) {
-          Show show = new Show(model, controller, row, col);
+          Show show = new Show(model);
           grid.add(show.render(), col, row);
         }
       }
