@@ -77,7 +77,7 @@ public class AppTest {
     Model model = createTestModel(PUZZLE_01);
     boolean check1 = false;
     try {
-      model.revealCell(-1, 100);
+      model.revealCell(-1, 100, true);
     } catch (IndexOutOfBoundsException ignored) {
       check1 = true;
     }
@@ -88,13 +88,13 @@ public class AppTest {
   public void testModelRevealCell() {
     Model model = createTestModel(PUZZLE_01);
     assertEquals(CellState.HIDE, model.getCellState(0, 0));
-    model.revealCell(0, 0);
+    model.revealCell(0, 0, true);
     assertEquals(CellState.SHOW, model.getCellState(0, 0));
     model.resetPuzzle();
     //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
     //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
     //    }
-    model.revealCell(0, 0);
+    model.revealCell(0, 0, true);
     //    System.out.println();
     //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
     //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
@@ -115,7 +115,7 @@ public class AppTest {
     assertFalse(model.isFlag(0, 0));
     // Testing flagging a revealed cell.
     assertEquals(CellState.HIDE, model.getCellState(0, 0));
-    model.revealCell(0, 0);
+    model.revealCell(0, 0, true);
     model.addFlag(0, 0);
     assertEquals(CellState.SHOW, model.getCellState(0, 0));
   }
@@ -128,7 +128,7 @@ public class AppTest {
     int puzzleWidth = model.getActivePuzzle().getWidth();
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
-        model.revealCell(r, c);
+        model.revealCell(r, c, true);
         assertEquals(CellState.SHOW, model.getCellState(r, c));
       }
     }
@@ -149,7 +149,7 @@ public class AppTest {
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
         if (PUZZLE_01[r][c] != 9) {
-          model.revealCell(r, c);
+          model.revealCell(r, c, true);
         }
       }
     }

@@ -27,7 +27,7 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void revealCell(int r, int c) {
+  public void revealCell(int r, int c, boolean rootCell) {
     checkIndexInBounds(r, c);
     if (cellStateMap[r][c] == CellState.HIDE) {
       cellStateMap[r][c] = CellState.SHOW;
@@ -37,7 +37,8 @@ public class ModelImpl implements Model {
       Puzzle activePuzzle = this.getActivePuzzle();
       if (activePuzzle.getCellType(r, c) == CellType.BLANK) {
         this.revealBlankAlgorithm(r, c);
-      } else {
+      }
+      if (rootCell) {
         notify(this);
       }
     }
@@ -45,16 +46,11 @@ public class ModelImpl implements Model {
 
   @Override
   public void revealBlankAlgorithm(int r, int c) {
-    Puzzle activePuzzle = this.getActivePuzzle();
-    if (activePuzzle.getCellType(r, c) != CellType.BLANK) {
-      throw new IllegalArgumentException("This cell is not blank.");
-    }
-
     for (int row = r - 1; row <= r + 1; row++) {
       for (int col = c - 1; col <= c + 1; col++) {
         if (row != r || col != c) {
           try {
-            revealCell(row, col);
+            revealCell(row, col, false);
           } catch (IndexOutOfBoundsException ignored) {
           } catch (Exception e) {
             throw new RuntimeException("Blank reveal algorithm failure.");
@@ -62,7 +58,6 @@ public class ModelImpl implements Model {
         }
       }
     }
-    notify(this);
   }
 
   @Override

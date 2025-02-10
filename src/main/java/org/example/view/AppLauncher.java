@@ -32,6 +32,5 @@ public class AppLauncher extends Application {
 
     stage.show();
     // stage.setY(stage.getY() + 2);
-    stage.setMaximized(true);
   }
 }

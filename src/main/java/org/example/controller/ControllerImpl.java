@@ -45,7 +45,7 @@ public class ControllerImpl implements Controller {
   
   @Override
   public void clickCell(int r, int c) {
-    model.revealCell(r, c);
+    model.revealCell(r, c, true);
   }
   
   @Override
