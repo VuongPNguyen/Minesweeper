@@ -4,7 +4,6 @@ import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import org.example.controller.Controller;
 import org.example.model.CellState;
-import org.example.model.CellType;
 import org.example.model.Model;
 import org.example.model.Puzzle;
 

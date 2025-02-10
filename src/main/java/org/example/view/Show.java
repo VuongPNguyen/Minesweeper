@@ -2,7 +2,6 @@ package org.example.view;
 
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
-import org.example.controller.Controller;
 import org.example.model.Model;
 
 import static org.example.view.ViewConstants.*;

@@ -1,11 +1,9 @@
 package org.example.view;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.controller.Controller;
 import org.example.model.*;
@@ -32,7 +30,6 @@ public class View implements FXComponent, ModelObserver {
 
   @Override
   public Parent render() {
-    Rectangle2D screen = Screen.getPrimary().getVisualBounds();
     Pane vBox = new VBox();
     vBox.getStyleClass().add("client");
     vBox.setMaxHeight(MaxScreenHeight);
