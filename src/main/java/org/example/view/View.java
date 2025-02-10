@@ -3,12 +3,9 @@ package org.example.view;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.example.controller.Controller;
 import org.example.model.Model;
 import org.example.model.ModelObserver;
@@ -40,14 +37,17 @@ public class View implements FXComponent, ModelObserver {
     vBox.getStyleClass().add("client");
     vBox.setMaxHeight(MaxScreenHeight);
     vBox.setMaxWidth(MaxScreenWidth);
-
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
-    Mine mine = new Mine(model, 0, 0);
-    vBox.getChildren().add(mine.render());
-    Clue clue = new Clue(model, 4, 1);
-    vBox.getChildren().add(clue.render());
-    Blank blank = new Blank(model, 0, 0);
-    vBox.getChildren().add(blank.render());
+
+    StackPane puzzleArea = new StackPane();
+
+    PuzzleGrid puzzleGrid = new PuzzleGrid(model);
+    puzzleArea.getChildren().add(puzzleGrid.render());
+
+    PlayGrid playGrid = new PlayGrid(model, controller);
+    puzzleArea.getChildren().add(playGrid.render());
+
+    vBox.getChildren().add(puzzleArea);
 
     return vBox;
   }

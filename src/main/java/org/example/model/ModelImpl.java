@@ -18,12 +18,6 @@ public class ModelImpl implements Model {
     this.resetPuzzle();
   }
   
-  // TEMP METHOD DELETE LATER
-  @Override
-  public CellState[][] getCellStateMap() {
-    return cellStateMap;
-  }
-  
   public void checkIndexInBounds(int r, int c) {
     int puzzleHeight = this.getActivePuzzle().getHeight();
     int puzzleWidth = this.getActivePuzzle().getWidth();

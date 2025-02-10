@@ -1,9 +1,6 @@
 package org.example.model;
 
 public interface Model {
-  /** TEMP METHOD DELETE LATER */
-  CellState[][] getCellStateMap();
-  
   /**
    * Reveals the cell if not revealed yet in the active puzzle in the cell at row r, column c.
    * Throws an IndexOutOfBoundsException if r or c is out of bounds.

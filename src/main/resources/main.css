@@ -3,9 +3,26 @@
 }
 
 .cell {
+  -fx-alignment: center;
   -fx-background-color: lavender;
   -fx-font-weight: bold;
 }
 
+.flag {
+  -fx-background-color: red;
+}
+
+.hide {
+  -fx-alignment: center;
+  -fx-background-color: lightslategray;
+}
+
 .grid {
+  -fx-alignment: center;
+  -fx-background-color: black;
+}
+
+.play-grid {
+  -fx-alignment: center;
+  -fx-background-color: transparent;
 }
