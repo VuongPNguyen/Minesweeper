@@ -49,7 +49,7 @@ public class ModelImpl implements Model {
       }
       this.updateGameState();
       if (this.isMine(r, c)) {
-        notify(this, RenderType.CHANGE_PUZZLE_CELL);
+        notify(this);
       } else if (rootCell) {
         notify(this, RenderType.CHANGE_CELL_STATE);
       }
@@ -207,6 +207,12 @@ public class ModelImpl implements Model {
   @Override
   public void removeObserver(ModelObserver observer) {
     modelObserverList.remove(observer);
+  }
+
+  public void notify(Model model) {
+    for (ModelObserver o : modelObserverList) {
+      o.update(model);
+    }
   }
 
   public void notify(Model model, RenderType renderType) {
