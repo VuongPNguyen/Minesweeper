@@ -9,7 +9,8 @@
 }
 
 .flag {
-  -fx-background-color: red;
+  -fx-alignment: center;
+  -fx-background-color: lightslategray;
 }
 
 .hide {

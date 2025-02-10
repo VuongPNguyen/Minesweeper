@@ -1,6 +1,8 @@
 package org.example.view;
 
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import org.example.controller.Controller;
@@ -32,6 +34,11 @@ public class Flag implements FXComponent {
     cellSize -= gridGap + gridGap / Math.min(puzzleHeight, puzzleWidth);
     background.setMinSize(cellSize, cellSize);
     background.setMaxSize(cellSize, cellSize);
+    
+    ImageView flagImage = new ImageView(new Image("flag.png"));
+    flagImage.setFitWidth(cellSize - 10);
+    flagImage.setFitHeight(cellSize - 10);
+    background.getChildren().add(flagImage);
 
     background.setOnMouseClicked(e -> {
       if (e.getButton() == MouseButton.SECONDARY) {

@@ -70,8 +70,14 @@ public interface Model {
   /** Getter method for number of cells required to reveal to win. */
   int getRevealTarget();
   
-  /** Returns true if the active puzzle is solved (i.e. every non-mine cell is revealed) */
-  boolean isSolved();
+  /**
+   * Returns true if the active puzzle is solved (i.e. every non-mine cell is revealed)
+   */
+  void updateGameState();
+  
+  GameState getGameState();
+  
+  void setGameState(GameState gameState);
   
   /** Adds an observer to the model */
   void addObserver(ModelObserver observer);

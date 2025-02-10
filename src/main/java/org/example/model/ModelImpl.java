@@ -9,6 +9,7 @@ public class ModelImpl implements Model {
   private CellState[][] cellStateMap;
   private int revealTarget;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
+  private GameState gameState;
 
   public ModelImpl(PuzzleLibrary puzzleLibrary) {
     if (puzzleLibrary == null) {
@@ -31,13 +32,16 @@ public class ModelImpl implements Model {
     checkIndexInBounds(r, c);
     if (cellStateMap[r][c] == CellState.HIDE) {
       cellStateMap[r][c] = CellState.SHOW;
-      if (!this.isMine(r, c)) {
+      if (this.isMine(r, c)) {
+        setGameState(GameState.LOSE);
+      } else {
         revealTarget--;
       }
       Puzzle activePuzzle = this.getActivePuzzle();
       if (activePuzzle.getCellType(r, c) == CellType.BLANK) {
         this.revealBlankAlgorithm(r, c);
       }
+      this.updateGameState();
       if (rootCell) {
         notify(this);
       }
@@ -140,6 +144,7 @@ public class ModelImpl implements Model {
         }
       }
     }
+    this.setGameState(GameState.PLAYING);
     notify(this);
   }
 
@@ -149,8 +154,22 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public boolean isSolved() {
-    return revealTarget == 0;
+  public void updateGameState() {
+    if (this.getGameState() == GameState.LOSE) {
+      return;
+    } else if (this.getRevealTarget() == 0) {
+      this.setGameState(GameState.WIN);
+    }
+  }
+
+  @Override
+  public GameState getGameState() {
+    return gameState;
+  }
+
+  @Override
+  public void setGameState(GameState gameState) {
+    this.gameState = gameState;
   }
 
   @Override

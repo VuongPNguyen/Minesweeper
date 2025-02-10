@@ -3,10 +3,12 @@ package org.example.view;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.controller.Controller;
+import org.example.model.GameState;
 import org.example.model.Model;
 import org.example.model.ModelObserver;
 
@@ -39,6 +41,8 @@ public class View implements FXComponent, ModelObserver {
     vBox.setMaxWidth(MaxScreenWidth);
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
 
+    Label label = new Label(String.valueOf(model.getRevealTarget()));
+
     StackPane puzzleArea = new StackPane();
 
     PuzzleGrid puzzleGrid = new PuzzleGrid(model);
@@ -47,6 +51,13 @@ public class View implements FXComponent, ModelObserver {
     PlayGrid playGrid = new PlayGrid(model, controller);
     puzzleArea.getChildren().add(playGrid.render());
 
+    if (model.getGameState() == GameState.LOSE) {
+      label = new Label("LOSE");
+    } else if (model.getGameState() == GameState.WIN) {
+      label = new Label("WIN");
+    }
+
+    vBox.getChildren().add(label);
     vBox.getChildren().add(puzzleArea);
 
     return vBox;

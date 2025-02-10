@@ -153,6 +153,6 @@ public class AppTest {
         }
       }
     }
-    assertTrue(model.isSolved());
+    assertEquals(GameState.WIN, model.getGameState());
   }
 }
