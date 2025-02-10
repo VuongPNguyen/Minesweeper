@@ -5,7 +5,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.example.model.GameState;
 import org.example.model.Model;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 import static org.example.view.ViewConstants.*;
 
@@ -33,6 +37,10 @@ public class Mine implements FXComponent {
     mineImage.setFitWidth(cellSize - 10);
     mineImage.setFitHeight(cellSize - 10);
     background.getChildren().add(mineImage);
+    
+    if (Arrays.equals(model.getExplodedMine(), new int[]{row, col})){
+      background.setStyle("-fx-background-color: red");
+    }
     
     return background;
   }

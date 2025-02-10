@@ -84,4 +84,8 @@ public interface Model {
   
   /** Removes an observer from the model */
   void removeObserver(ModelObserver observer);
+  
+  int[] getExplodedMine();
+  
+  void setExplodedMine(int[] coordinates);
 }
