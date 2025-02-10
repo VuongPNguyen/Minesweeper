@@ -1,6 +1,7 @@
 package com.example;
 
 import static org.example.Puzzles.*;
+import static org.example.model.RenderType.*;
 import static org.junit.Assert.*;
 
 import org.example.model.*;
@@ -90,7 +91,7 @@ public class AppTest {
     assertEquals(CellState.HIDE, model.getCellState(0, 0));
     model.revealCell(0, 0, true);
     assertEquals(CellState.SHOW, model.getCellState(0, 0));
-    model.resetPuzzle();
+    model.resetPuzzle(TEST);
     //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
     //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
     //    }
@@ -133,7 +134,7 @@ public class AppTest {
       }
     }
     assertEquals(0, model.getRevealTarget());
-    model.resetPuzzle();
+    model.resetPuzzle(TEST);
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
         assertEquals(CellState.HIDE, model.getCellState(r, c));

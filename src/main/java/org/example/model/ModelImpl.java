@@ -17,7 +17,7 @@ public class ModelImpl implements Model {
       throw new IllegalArgumentException("PuzzleLibrary is null");
     }
     this.puzzleLibrary = puzzleLibrary;
-    this.resetPuzzle();
+    this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
 
   public void checkIndexInBounds(int r, int c) {
@@ -141,7 +141,7 @@ public class ModelImpl implements Model {
       throw new IndexOutOfBoundsException("Index out of bounds of PuzzleLibrary.");
     }
     this.puzzleIndex = index;
-    this.resetPuzzle();
+    this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
 
   @Override
@@ -150,7 +150,7 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void resetPuzzle() {
+  public void resetPuzzle(RenderType renderType) {
     revealTarget = 0;
     int puzzleHeight = this.getActivePuzzle().getHeight();
     int puzzleWidth = this.getActivePuzzle().getWidth();
@@ -164,7 +164,7 @@ public class ModelImpl implements Model {
       }
     }
     this.setGameState(GameState.PLAYING);
-    notify(this);
+    notify(this, renderType);
   }
 
   @Override
@@ -204,6 +204,12 @@ public class ModelImpl implements Model {
   public void notify(Model model) {
     for (ModelObserver o : modelObserverList) {
       o.update(model);
+    }
+  }
+  
+  public void notify(Model model, RenderType renderType) {
+    for (ModelObserver o : modelObserverList) {
+      o.update(model, renderType);
     }
   }
 

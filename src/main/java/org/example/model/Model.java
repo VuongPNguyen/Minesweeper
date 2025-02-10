@@ -63,7 +63,7 @@ public interface Model {
   int getPuzzleLibrarySize();
 
   /** Resets the active puzzle by removing all lamps which have been placed */
-  void resetPuzzle();
+  void resetPuzzle(RenderType renderType);
 
   /** Getter method for number of cells required to reveal to win. */
   int getRevealTarget();
