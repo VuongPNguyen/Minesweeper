@@ -1,0 +1,43 @@
+.client {
+  -fx-alignment: center;
+}
+
+.control-panel {
+  -fx-alignment: center;
+}
+
+.cell {
+  -fx-alignment: center;
+  -fx-background-color: lavender;
+  -fx-font-weight: bold;
+}
+
+.flag {
+  -fx-alignment: center;
+  -fx-background-color: lightslategray;
+}
+
+.hide {
+  -fx-alignment: center;
+  -fx-background-color: lightslategray;
+}
+
+.show {
+  -fx-alignment: center;
+  -fx-background-color: transparent;
+}
+
+.play-cell {
+  -fx-alignment: center;
+  -fx-background-color: lightslategray;
+}
+
+.grid {
+  -fx-alignment: center;
+  -fx-background-color: black;
+}
+
+.play-grid {
+  -fx-alignment: center;
+  -fx-background-color: transparent;
+}
