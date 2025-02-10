@@ -17,6 +17,11 @@
   -fx-background-color: lightslategray;
 }
 
+.show {
+  -fx-alignment: center;
+  -fx-background-color: transparent;
+}
+
 .grid {
   -fx-alignment: center;
   -fx-background-color: black;

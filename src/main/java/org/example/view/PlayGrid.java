@@ -34,6 +34,9 @@ public class PlayGrid implements FXComponent {
         } else if (model.getCellState(row, col) == CellState.FLAG) {
           Flag flag = new Flag(model, controller, row, col);
           grid.add(flag.render(), col, row);
+        } else if (model.getCellState(row, col) == CellState.SHOW) {
+          Show show = new Show(model, controller, row, col);
+          grid.add(show.render(), col, row);
         }
       }
     }

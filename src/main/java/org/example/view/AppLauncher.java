@@ -18,7 +18,7 @@ public class AppLauncher extends Application {
     puzzleLibrary.addPuzzle(new PuzzleImpl(PUZZLE_03));
 
     Model model = new ModelImpl(puzzleLibrary);
-    model.setActivePuzzleIndex(0);
+    model.setActivePuzzleIndex(1);
     Controller controller = new ControllerImpl(model);
     View view = new View(model, controller, stage);
 
