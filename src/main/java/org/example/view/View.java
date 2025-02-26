@@ -60,11 +60,8 @@ public class View implements FXComponent, ModelObserver {
      */
     puzzleArea = new StackPane();
 
-    puzzleGrid = new PuzzleGrid(model).render();
-    puzzleArea.getChildren().add(puzzleGrid);
-
-    playGrid = new PlayGrid(model, controller).render();
-    puzzleArea.getChildren().add(playGrid);
+    OneGrid oneGrid = new OneGrid(model, controller);
+    puzzleArea.getChildren().add(oneGrid.render());
 
     vBox.getChildren().add(libraryControlPanel);
     vBox.getChildren().add(puzzleControlPanel);
@@ -89,20 +86,8 @@ public class View implements FXComponent, ModelObserver {
 
         puzzleArea = new StackPane();
 
-        Runnable renderPlayGrid = () -> playGrid = new PlayGrid(model, controller).render();
-        
-        Thread playGridThread = new Thread(renderPlayGrid);
-        playGridThread.start();
-
-        puzzleGrid = new PuzzleGrid(model).render();
-        puzzleArea.getChildren().add(puzzleGrid);
-
-        try {
-          playGridThread.join();
-        } catch (InterruptedException e) {
-          throw new RuntimeException("playGridThread interrupted");
-        }
-        puzzleArea.getChildren().add(playGrid);
+        OneGrid oneGrid = new OneGrid(model, controller);
+        puzzleArea.getChildren().add(oneGrid.render());
 
         vBox.getChildren().add(puzzleArea);
 
@@ -111,14 +96,12 @@ public class View implements FXComponent, ModelObserver {
       case CHANGE_CELL_STATE -> {
         vBox.getChildren().add(libraryControlPanel);
         vBox.getChildren().add(puzzleControlPanel);
-        
+
         puzzleArea = new StackPane();
-        
-        puzzleArea.getChildren().add(puzzleGrid);
-        
-        playGrid = new PlayGrid(model, controller).render();
-        puzzleArea.getChildren().add(playGrid);
-        
+
+        OneGrid oneGrid = new OneGrid(model, controller);
+        puzzleArea.getChildren().add(oneGrid.render());
+
         vBox.getChildren().add(puzzleArea);
         
         return vBox;
