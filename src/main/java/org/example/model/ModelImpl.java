@@ -48,9 +48,7 @@ public class ModelImpl implements Model {
         this.revealBlankAlgorithm(r, c);
       }
       this.updateGameState();
-      if (this.isMine(r, c)) {
-        notify(this);
-      } else if (rootCell) {
+      if (rootCell) {
         notify(this, RenderType.CHANGE_CELL_STATE);
       }
     }

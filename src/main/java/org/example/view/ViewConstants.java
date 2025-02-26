@@ -10,5 +10,5 @@ public class ViewConstants {
   public static double MaxScreenHeight = screen.getHeight() - 32 - DefaultButtonSize * 2;
   public static double MaxScreenWidth = screen.getWidth() - 2;
 
-  public static double gridGap = 1; // 2
+  public static double gridGap = 0; // 2
 }
