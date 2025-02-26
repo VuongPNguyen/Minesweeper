@@ -48,7 +48,9 @@ public class ModelImpl implements Model {
         this.revealBlankAlgorithm(r, c);
       }
       this.updateGameState();
-      if (rootCell) {
+      if (this.isMine(r, c)) {
+        notify(this);
+      } else if (rootCell) {
         notify(this, RenderType.CHANGE_CELL_STATE);
       }
     }
@@ -212,7 +214,7 @@ public class ModelImpl implements Model {
       o.update(model);
     }
   }
-  
+
   public void notify(Model model, RenderType renderType) {
     for (ModelObserver o : modelObserverList) {
       o.update(model, renderType);

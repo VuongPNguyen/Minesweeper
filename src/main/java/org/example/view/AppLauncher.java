@@ -23,7 +23,7 @@ public class AppLauncher extends Application {
     View view = new View(model, controller, stage);
 
     model.addObserver(view);
-    Scene scene = new Scene(view.render());
+    Scene scene = new Scene(view.render(RenderType.NEW_PUZZLE));
     scene.getStylesheets().add("main.css");
 
     stage.setScene(scene);

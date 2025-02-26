@@ -20,6 +20,7 @@ public class PuzzleGrid implements FXComponent {
     GridPane grid = new GridPane();
     grid.getStyleClass().add("grid");
     grid.setMaxHeight(MaxScreenHeight);
+    grid.setPrefHeight(MaxScreenHeight);
     
     Puzzle activePuzzle = model.getActivePuzzle();
     for (int row = 0; row < activePuzzle.getHeight(); row++) {
@@ -38,8 +39,8 @@ public class PuzzleGrid implements FXComponent {
     }
     grid.setHgap(gridGap);
     grid.setVgap(gridGap);
-    grid.setGridLinesVisible(true);
-
+    grid.setGridLinesVisible(false);
+    
     return grid;
   }
 }
