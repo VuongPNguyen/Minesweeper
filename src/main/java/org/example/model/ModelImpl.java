@@ -7,7 +7,7 @@ public class ModelImpl implements Model {
   private final PuzzleLibrary puzzleLibrary;
   private int puzzleIndex = 0;
   private CellState[][] cellStateMap;
-  private int revealTarget;
+  private int revealGoal;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
   private GameState gameState;
   private int[] explodedMine = new int[] {-1, -1};
@@ -17,7 +17,7 @@ public class ModelImpl implements Model {
       throw new IllegalArgumentException("PuzzleLibrary is null");
     }
     this.puzzleLibrary = puzzleLibrary;
-    this.resetPuzzle();
+    this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
 
   public void checkIndexInBounds(int r, int c) {
@@ -31,25 +31,27 @@ public class ModelImpl implements Model {
   @Override
   public void revealCell(int r, int c, boolean rootCell) {
     checkIndexInBounds(r, c);
-    if (getGameState() == GameState.LOSE) {
+    if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
       return;
     }
     if (cellStateMap[r][c] == CellState.HIDE) {
       cellStateMap[r][c] = CellState.SHOW;
-      if (this.isMine(r, c)) {
+      if (this.isMine(r, c) && rootCell) {
         revealAllMines();
         setExplodedMine(new int[] {r, c});
         setGameState(GameState.LOSE);
       } else {
-        revealTarget--;
+        revealGoal--;
       }
       Puzzle activePuzzle = this.getActivePuzzle();
       if (activePuzzle.getCellType(r, c) == CellType.BLANK) {
         this.revealBlankAlgorithm(r, c);
       }
       this.updateGameState();
-      if (rootCell) {
-        notify(this);
+      if (this.isMine(r, c) && rootCell) {
+        notify(this, RenderType.TRIGGER_MINES);
+      } else if (rootCell) {
+        notify(this, RenderType.CHANGE_CELL_STATE);
       }
     }
   }
@@ -86,18 +88,24 @@ public class ModelImpl implements Model {
   @Override
   public void addFlag(int r, int c) {
     checkIndexInBounds(r, c);
+    if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
+      return;
+    }
     if (this.getCellState(r, c) == CellState.HIDE) {
       cellStateMap[r][c] = CellState.FLAG;
-      notify(this);
+      notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
 
   @Override
   public void removeFlag(int r, int c) {
     checkIndexInBounds(r, c);
+    if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
+      return;
+    }
     if (this.isFlag(r, c)) {
       cellStateMap[r][c] = CellState.HIDE;
-      notify(this);
+      notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
 
@@ -141,7 +149,7 @@ public class ModelImpl implements Model {
       throw new IndexOutOfBoundsException("Index out of bounds of PuzzleLibrary.");
     }
     this.puzzleIndex = index;
-    this.resetPuzzle();
+    this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
 
   @Override
@@ -150,8 +158,8 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void resetPuzzle() {
-    revealTarget = 0;
+  public void resetPuzzle(RenderType renderType) {
+    revealGoal = 0;
     int puzzleHeight = this.getActivePuzzle().getHeight();
     int puzzleWidth = this.getActivePuzzle().getWidth();
     cellStateMap = new CellState[puzzleHeight][puzzleWidth];
@@ -159,24 +167,22 @@ public class ModelImpl implements Model {
       for (int c = 0; c < puzzleWidth; c++) {
         cellStateMap[r][c] = CellState.HIDE;
         if (!this.isMine(r, c)) {
-          revealTarget++;
+          revealGoal++;
         }
       }
     }
     this.setGameState(GameState.PLAYING);
-    notify(this);
+    notify(this, renderType);
   }
 
   @Override
-  public int getRevealTarget() {
-    return revealTarget;
+  public int getRevealGoal() {
+    return revealGoal;
   }
 
   @Override
   public void updateGameState() {
-    if (this.getGameState() == GameState.LOSE) {
-      return;
-    } else if (this.getRevealTarget() == 0) {
+    if (this.getRevealGoal() == 0) {
       this.setGameState(GameState.WIN);
     }
   }
@@ -201,9 +207,9 @@ public class ModelImpl implements Model {
     modelObserverList.remove(observer);
   }
 
-  public void notify(Model model) {
+  public void notify(Model model, RenderType renderType) {
     for (ModelObserver o : modelObserverList) {
-      o.update(model);
+      o.update(model, renderType);
     }
   }
 

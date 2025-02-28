@@ -1,22 +1,24 @@
 package org.example.view;
 
 import static org.example.view.ViewConstants.*;
+import static org.example.view.ViewConstants.gridGap;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.example.model.Model;
 
-public class Mine implements FXComponent {
+public class EmptyCell implements FXComponent {
   private final Model model;
 
-  public Mine(Model model) {
+  public EmptyCell(Model model) {
     this.model = model;
   }
 
+  @Override
   public Parent render() {
     StackPane background = new StackPane();
-    background.getStyleClass().add("cell");
+    background.getStyleClass().add("show");
+
     int puzzleHeight = model.getActivePuzzle().getHeight();
     int puzzleWidth = model.getActivePuzzle().getWidth();
     double cellSize = Math.min(MaxScreenHeight / puzzleHeight, MaxScreenWidth / puzzleWidth);
@@ -24,9 +26,6 @@ public class Mine implements FXComponent {
     background.setMinSize(cellSize, cellSize);
     background.setMaxSize(cellSize, cellSize);
 
-    Label label = new Label("⨷");
-    background.getChildren().add(label);
-    background.setStyle("-fx-font-size: " + cellSize);
     return background;
   }
 }

@@ -1,13 +1,13 @@
 package org.example.view;
 
+import static org.example.Puzzles.*;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.example.controller.*;
 import org.example.model.*;
-
-import static org.example.Puzzles.*;
 
 public class AppLauncher extends Application {
   @Override
@@ -23,7 +23,7 @@ public class AppLauncher extends Application {
     View view = new View(model, controller, stage);
 
     model.addObserver(view);
-    Scene scene = new Scene(view.render());
+    Scene scene = new Scene(view.render(RenderType.NEW_PUZZLE));
     scene.getStylesheets().add("main.css");
 
     stage.setScene(scene);
@@ -31,7 +31,6 @@ public class AppLauncher extends Application {
     stage.setTitle("Minesweeper");
 
     stage.show();
-    stage.setY(stage.getY() + 2);
     stage.setMaximized(true);
   }
 }

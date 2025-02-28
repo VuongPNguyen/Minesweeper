@@ -7,10 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.example.model.Model;
 
-public class Mine implements FXComponent {
+public class ExplodedMine implements FXComponent {
   private final Model model;
 
-  public Mine(Model model) {
+  public ExplodedMine(Model model) {
     this.model = model;
   }
 
@@ -23,10 +23,13 @@ public class Mine implements FXComponent {
     cellSize -= gridGap + gridGap / Math.min(puzzleHeight, puzzleWidth);
     background.setMinSize(cellSize, cellSize);
     background.setMaxSize(cellSize, cellSize);
+    background.setStyle("-fx-font-size: " + cellSize + ";");
 
     Label label = new Label("⨷");
+    label.getStyleClass().add("exploded-mine");
+
     background.getChildren().add(label);
-    background.setStyle("-fx-font-size: " + cellSize);
+
     return background;
   }
 }
