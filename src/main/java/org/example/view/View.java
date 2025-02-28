@@ -18,7 +18,6 @@ public class View implements FXComponent, ModelObserver {
   private Node libraryControlPanel;
   private final Node puzzleControlPanel;
   private StackPane puzzleArea = new StackPane();
-  private Node puzzleGrid;
   private Node playGrid;
 
   public View(Model model, Controller controller, Stage stage) {
@@ -29,14 +28,6 @@ public class View implements FXComponent, ModelObserver {
     // FXComponents
     libraryControlPanel = new LibraryControlPanel(model, controller).render();
     puzzleControlPanel = new PuzzleControlPanel(model, controller).render();
-  }
-
-  @Override
-  public void update(Model model) {
-    Scene scene = new Scene(this.render());
-    scene.getStylesheets().add("main.css");
-    stage.setScene(scene);
-    stage.setMaximized(true);
   }
 
   public void update(Model model, RenderType renderType) {
@@ -60,8 +51,8 @@ public class View implements FXComponent, ModelObserver {
      */
     puzzleArea = new StackPane();
 
-    OneGrid oneGrid = new OneGrid(model, controller);
-    puzzleArea.getChildren().add(oneGrid.render());
+    PlayGrid playGrid = new PlayGrid(model, controller);
+    puzzleArea.getChildren().add(playGrid.render());
 
     vBox.getChildren().add(libraryControlPanel);
     vBox.getChildren().add(puzzleControlPanel);
@@ -86,11 +77,10 @@ public class View implements FXComponent, ModelObserver {
 
         puzzleArea = new StackPane();
 
-        OneGrid oneGrid = new OneGrid(model, controller);
-        puzzleArea.getChildren().add(oneGrid.render());
+        PlayGrid playGrid = new PlayGrid(model, controller);
+        puzzleArea.getChildren().add(playGrid.render());
 
         vBox.getChildren().add(puzzleArea);
-
         return vBox;
       }
       case CHANGE_CELL_STATE -> {
@@ -99,11 +89,26 @@ public class View implements FXComponent, ModelObserver {
 
         puzzleArea = new StackPane();
 
-        OneGrid oneGrid = new OneGrid(model, controller);
-        puzzleArea.getChildren().add(oneGrid.render());
+        playGrid = new PlayGrid(model, controller).render();
+        puzzleArea.getChildren().add(playGrid);
 
         vBox.getChildren().add(puzzleArea);
-        
+
+        return vBox;
+      }
+      case TRIGGER_MINES -> {
+        vBox.getChildren().add(libraryControlPanel);
+        vBox.getChildren().add(puzzleControlPanel);
+
+        puzzleArea = new StackPane();
+
+        puzzleArea.getChildren().add(playGrid);
+
+        PlayGridRevealMines playGridRevealMines = new PlayGridRevealMines(model);
+        puzzleArea.getChildren().add(playGridRevealMines.render());
+
+        vBox.getChildren().add(puzzleArea);
+
         return vBox;
       }
     }

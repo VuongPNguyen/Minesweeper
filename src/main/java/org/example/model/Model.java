@@ -66,7 +66,7 @@ public interface Model {
   void resetPuzzle(RenderType renderType);
 
   /** Getter method for number of cells required to reveal to win. */
-  int getRevealTarget();
+  int getRevealGoal();
 
   /** Returns true if the active puzzle is solved (i.e. every non-mine cell is revealed) */
   void updateGameState();

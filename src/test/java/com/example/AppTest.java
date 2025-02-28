@@ -124,7 +124,7 @@ public class AppTest {
   @Test
   public void testModelResetPuzzle() {
     Model model = createTestModel(PUZZLE_01);
-    assertEquals(70, model.getRevealTarget());
+    assertEquals(70, model.getRevealGoal());
     int puzzleHeight = model.getActivePuzzle().getHeight();
     int puzzleWidth = model.getActivePuzzle().getWidth();
     for (int r = 0; r < puzzleHeight; r++) {
@@ -133,17 +133,18 @@ public class AppTest {
         assertEquals(CellState.SHOW, model.getCellState(r, c));
       }
     }
-    assertEquals(0, model.getRevealTarget());
+    assertEquals(0, model.getRevealGoal());
     model.resetPuzzle(TEST);
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
         assertEquals(CellState.HIDE, model.getCellState(r, c));
       }
     }
-    assertEquals(70, model.getRevealTarget());
+    assertEquals(70, model.getRevealGoal());
   }
-  
-  @Test public void testModelIsSolved() {
+
+  @Test
+  public void testModelIsSolved() {
     Model model = createTestModel(PUZZLE_01);
     int puzzleHeight = model.getActivePuzzle().getHeight();
     int puzzleWidth = model.getActivePuzzle().getWidth();

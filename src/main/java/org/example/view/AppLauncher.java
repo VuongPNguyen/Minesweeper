@@ -1,13 +1,13 @@
 package org.example.view;
 
+import static org.example.Puzzles.*;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.example.controller.*;
 import org.example.model.*;
-
-import static org.example.Puzzles.*;
 
 public class AppLauncher extends Application {
   @Override
