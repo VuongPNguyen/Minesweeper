@@ -2,21 +2,24 @@ package org.example.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 
 public class ModelImpl implements Model {
-  private final PuzzleLibrary puzzleLibrary;
+  private final Puzzle puzzle;
   private int puzzleIndex = 0;
   private CellState[][] cellStateMap;
   private int revealGoal;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
   private GameState gameState;
   private int[] explodedMine = new int[] {-1, -1};
+  private PuzzleGenerator puzzleGenerator;
 
   public ModelImpl(PuzzleLibrary puzzleLibrary) {
     if (puzzleLibrary == null) {
       throw new IllegalArgumentException("PuzzleLibrary is null");
     }
-    this.puzzleLibrary = puzzleLibrary;
+    puzzleGenerator = new PuzzleGeneratorImpl(new int[] {0, 0});
+    puzzle = puzzleGenerator.generateRandomPuzzle(PuzzleDifficulty.MEDIUM);
     this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
 
@@ -135,26 +138,12 @@ public class ModelImpl implements Model {
 
   @Override
   public Puzzle getActivePuzzle() {
-    return puzzleLibrary.getPuzzle(this.getActivePuzzleIndex());
+    return puzzle;
   }
 
   @Override
   public int getActivePuzzleIndex() {
     return puzzleIndex;
-  }
-
-  @Override
-  public void setActivePuzzleIndex(int index) {
-    if (index < 0 || index >= getPuzzleLibrarySize()) {
-      throw new IndexOutOfBoundsException("Index out of bounds of PuzzleLibrary.");
-    }
-    this.puzzleIndex = index;
-    this.resetPuzzle(RenderType.NEW_PUZZLE);
-  }
-
-  @Override
-  public int getPuzzleLibrarySize() {
-    return puzzleLibrary.size();
   }
 
   @Override

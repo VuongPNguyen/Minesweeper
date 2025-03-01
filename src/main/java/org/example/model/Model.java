@@ -53,15 +53,6 @@ public interface Model {
   /** Getter method for the active puzzle index */
   int getActivePuzzleIndex();
 
-  /**
-   * Setter method for the current active Puzzle index. If the passed index is out of bounds, this
-   * method should throw an IndexOutOfBoundsException
-   */
-  void setActivePuzzleIndex(int index);
-
-  /** Getter method for the number of puzzles contained in the internal PuzzleLibrary */
-  int getPuzzleLibrarySize();
-
   /** Resets the active puzzle by removing all lamps which have been placed */
   void resetPuzzle(RenderType renderType);
 

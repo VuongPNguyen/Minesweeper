@@ -1,10 +1,13 @@
 package com.example;
 
 import static org.example.Puzzles.*;
+import static org.example.model.PuzzleGenerator.PuzzleDifficulty.*;
 import static org.example.model.RenderType.*;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import org.example.model.*;
+import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 import org.junit.Test;
 
 public class AppTest {
@@ -123,8 +126,9 @@ public class AppTest {
 
   @Test
   public void testModelResetPuzzle() {
-    Model model = createTestModel(PUZZLE_01);
-    assertEquals(70, model.getRevealGoal());
+    int[][] blank = new int[10][9];
+    Model model = createTestModel(blank);
+    assertEquals(90, model.getRevealGoal());
     int puzzleHeight = model.getActivePuzzle().getHeight();
     int puzzleWidth = model.getActivePuzzle().getWidth();
     for (int r = 0; r < puzzleHeight; r++) {
@@ -140,7 +144,7 @@ public class AppTest {
         assertEquals(CellState.HIDE, model.getCellState(r, c));
       }
     }
-    assertEquals(70, model.getRevealGoal());
+    assertEquals(90, model.getRevealGoal());
   }
 
   @Test
@@ -156,5 +160,55 @@ public class AppTest {
       }
     }
     assertEquals(GameState.WIN, model.getGameState());
+  }
+
+  @Test
+  public void testPuzzleGenerator() {
+    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new int[] {4, 4}, EASY);
+    puzzleGeneratorImpl.generateBlankBoard();
+    for (int row = 0; row < puzzleGeneratorImpl.getBoard().length; row++) {
+      for (int col = 0; col < puzzleGeneratorImpl.getBoard()[0].length; col++) {
+        assertEquals(0, puzzleGeneratorImpl.getBoard()[row][col]);
+      }
+    }
+  }
+
+  @Test
+  public void testPuzzleGeneratorMinePlacement() {
+    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new int[] {0, 0}, EASY);
+
+    for (int i = 0; i < 10; i++) {
+      puzzleGeneratorImpl.generateBlankBoard();
+      puzzleGeneratorImpl.placeMines();
+      for (int row = 0; row < puzzleGeneratorImpl.getBoard().length; row++) {
+        // System.out.println((Arrays.toString(puzzleGeneratorImpl.getBoard()[row])));
+        for (int r = -1; r <= 1; r++) {
+          for (int c = -1; c <= 1; c++) {
+            if (r >= 0 && c >= 0) {
+              assertEquals(0, puzzleGeneratorImpl.getBoard()[r][c]);
+            }
+          }
+        }
+      }
+      // System.out.println();
+    }
+  }
+
+  @Test
+  public void testPuzzleGeneratorCluePlacement() {
+    PuzzleDifficulty[] difficulties = new PuzzleDifficulty[] {EASY, MEDIUM, HARD};
+
+    for (int i = 0; i < 3; i++) {
+      PuzzleGeneratorImpl puzzleGeneratorImpl =
+          new PuzzleGeneratorImpl(new int[] {4, 4}, difficulties[i]);
+      puzzleGeneratorImpl.generateBlankBoard();
+      puzzleGeneratorImpl.placeMines();
+      puzzleGeneratorImpl.placeClues();
+
+      for (int row = 0; row < puzzleGeneratorImpl.getBoard().length; row++) {
+        System.out.println((Arrays.toString(puzzleGeneratorImpl.getBoard()[row])));
+      }
+      System.out.println();
+    }
   }
 }
