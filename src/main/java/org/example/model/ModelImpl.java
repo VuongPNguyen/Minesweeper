@@ -2,22 +2,31 @@ package org.example.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 
 public class ModelImpl implements Model {
-  private final PuzzleLibrary puzzleLibrary;
-  private int puzzleIndex = 0;
+  private Puzzle puzzle;
   private CellState[][] cellStateMap;
   private int revealGoal;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
   private GameState gameState;
   private int[] explodedMine = new int[] {-1, -1};
+  private final PuzzleGenerator puzzleGenerator;
+  private PuzzleDifficulty puzzleDifficulty;
+  private boolean isNewPuzzle = true;
 
-  public ModelImpl(PuzzleLibrary puzzleLibrary) {
-    if (puzzleLibrary == null) {
-      throw new IllegalArgumentException("PuzzleLibrary is null");
+  public ModelImpl(PuzzleDifficulty puzzleDifficulty) {
+    if (puzzleDifficulty == null) {
+      throw new IllegalArgumentException("puzzleDifficulty is not valid");
     }
-    this.puzzleLibrary = puzzleLibrary;
+    this.puzzleDifficulty = puzzleDifficulty;
+    puzzleGenerator = new PuzzleGeneratorImpl(new int[] {0, 0});
+    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
     this.resetPuzzle(RenderType.NEW_PUZZLE);
+  }
+
+  public ModelImpl() {
+    this(PuzzleDifficulty.MEDIUM);
   }
 
   public void checkIndexInBounds(int r, int c) {
@@ -31,6 +40,10 @@ public class ModelImpl implements Model {
   @Override
   public void revealCell(int r, int c, boolean rootCell) {
     checkIndexInBounds(r, c);
+    if (isNewPuzzle) {
+      newPuzzle(r, c);
+      isNewPuzzle = false;
+    }
     if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
       return;
     }
@@ -48,9 +61,10 @@ public class ModelImpl implements Model {
         this.revealBlankAlgorithm(r, c);
       }
       this.updateGameState();
-      if (this.isMine(r, c) && rootCell) {
-        notify(this, RenderType.TRIGGER_MINES);
-      } else if (rootCell) {
+      //      if (this.isMine(r, c) && rootCell) {
+      //        notify(this, RenderType.TRIGGER_MINES);
+      //      } else
+      if (rootCell) {
         notify(this, RenderType.CHANGE_CELL_STATE);
       }
     }
@@ -110,11 +124,36 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public boolean isRevealed(int r, int c) {
-    checkIndexInBounds(r, c);
-    return this.getCellState(r, c) == CellState.SHOW;
+  public void newPuzzle(int row, int col) {
+    puzzleGenerator.setSafeCell(row, col);
+    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
+    resetPuzzle(RenderType.NEW_PUZZLE);
+    isNewPuzzle = true;
+    setGameState(GameState.PLAYING);
   }
 
+  @Override
+  public void newPuzzle() {
+    puzzleGenerator.setSafeCell(0, 0);
+    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
+    resetPuzzle(RenderType.NEW_PUZZLE);
+    isNewPuzzle = true;
+    setGameState(GameState.PLAYING);
+  }
+
+  @Override
+  public PuzzleDifficulty getPuzzleDifficulty() {
+    return puzzleDifficulty;
+  }
+
+  @Override
+  public void setPuzzleDifficulty(PuzzleDifficulty puzzleDifficulty) {
+    if (this.puzzleDifficulty != puzzleDifficulty) {
+      this.puzzleDifficulty = puzzleDifficulty;
+      this.newPuzzle();
+    }
+  }
+  
   @Override
   public boolean isFlag(int r, int c) {
     checkIndexInBounds(r, c);
@@ -135,26 +174,7 @@ public class ModelImpl implements Model {
 
   @Override
   public Puzzle getActivePuzzle() {
-    return puzzleLibrary.getPuzzle(this.getActivePuzzleIndex());
-  }
-
-  @Override
-  public int getActivePuzzleIndex() {
-    return puzzleIndex;
-  }
-
-  @Override
-  public void setActivePuzzleIndex(int index) {
-    if (index < 0 || index >= getPuzzleLibrarySize()) {
-      throw new IndexOutOfBoundsException("Index out of bounds of PuzzleLibrary.");
-    }
-    this.puzzleIndex = index;
-    this.resetPuzzle(RenderType.NEW_PUZZLE);
-  }
-
-  @Override
-  public int getPuzzleLibrarySize() {
-    return puzzleLibrary.size();
+    return puzzle;
   }
 
   @Override

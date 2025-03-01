@@ -7,8 +7,8 @@ public class ViewConstants {
   public static final double DefaultButtonSize = 25;
 
   public static final Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-  public static double MaxScreenHeight = screen.getHeight() - 32 - DefaultButtonSize * 2;
+  public static double MaxScreenHeight = screen.getHeight() - 32 - DefaultButtonSize * 3;
   public static double MaxScreenWidth = screen.getWidth() - 2;
 
-  public static double gridGap = 0; // 2
+  public static double gridGap = 0;
 }
