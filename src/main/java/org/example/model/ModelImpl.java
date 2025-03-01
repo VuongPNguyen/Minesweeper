@@ -5,22 +5,28 @@ import java.util.List;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 
 public class ModelImpl implements Model {
-  private final Puzzle puzzle;
-  private int puzzleIndex = 0;
+  private Puzzle puzzle;
   private CellState[][] cellStateMap;
   private int revealGoal;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
   private GameState gameState;
   private int[] explodedMine = new int[] {-1, -1};
-  private PuzzleGenerator puzzleGenerator;
+  private final PuzzleGenerator puzzleGenerator;
+  private PuzzleDifficulty puzzleDifficulty;
+  private boolean isNewPuzzle = true;
 
-  public ModelImpl(PuzzleLibrary puzzleLibrary) {
-    if (puzzleLibrary == null) {
-      throw new IllegalArgumentException("PuzzleLibrary is null");
+  public ModelImpl(PuzzleDifficulty puzzleDifficulty) {
+    if (puzzleDifficulty == null) {
+      throw new IllegalArgumentException("puzzleDifficulty is not valid");
     }
+    this.puzzleDifficulty = puzzleDifficulty;
     puzzleGenerator = new PuzzleGeneratorImpl(new int[] {0, 0});
-    puzzle = puzzleGenerator.generateRandomPuzzle(PuzzleDifficulty.MEDIUM);
+    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
     this.resetPuzzle(RenderType.NEW_PUZZLE);
+  }
+  
+  public ModelImpl() {
+    this(PuzzleDifficulty.MEDIUM);
   }
 
   public void checkIndexInBounds(int r, int c) {
@@ -34,6 +40,10 @@ public class ModelImpl implements Model {
   @Override
   public void revealCell(int r, int c, boolean rootCell) {
     checkIndexInBounds(r, c);
+    if (isNewPuzzle) {
+      newPuzzle(r, c);
+      isNewPuzzle = false;
+    }
     if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
       return;
     }
@@ -111,6 +121,20 @@ public class ModelImpl implements Model {
       notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
+  
+  @Override
+  public void newPuzzle(int row, int col) {
+    puzzleGenerator.setSafeCell(row, col);
+    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
+    resetPuzzle(RenderType.NEW_PUZZLE);
+    isNewPuzzle = true;
+    setGameState(GameState.PLAYING);
+  }
+  
+  @Override
+  public void setPuzzleDifficulty(PuzzleDifficulty puzzleDifficulty) {
+    this.puzzleDifficulty = puzzleDifficulty;
+  }
 
   @Override
   public boolean isRevealed(int r, int c) {
@@ -139,11 +163,6 @@ public class ModelImpl implements Model {
   @Override
   public Puzzle getActivePuzzle() {
     return puzzle;
-  }
-
-  @Override
-  public int getActivePuzzleIndex() {
-    return puzzleIndex;
   }
 
   @Override

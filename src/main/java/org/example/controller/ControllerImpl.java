@@ -14,29 +14,8 @@ public class ControllerImpl implements Controller {
   }
   
   @Override
-  public void clickNextPuzzle() {
-    int nextPuzzleIndex = model.getActivePuzzleIndex() + 1;
-    if (nextPuzzleIndex < model.getPuzzleLibrarySize()) {
-      model.setActivePuzzleIndex(nextPuzzleIndex);
-    }
-  }
+  public void clickNewPuzzle() {
   
-  @Override
-  public void clickPrevPuzzle() {
-    int prevPuzzleIndex = model.getActivePuzzleIndex() - 1;
-    if (prevPuzzleIndex >= 0) {
-      model.setActivePuzzleIndex(prevPuzzleIndex);
-    }
-  }
-  
-  @Override
-  public void clickRandPuzzle() {
-    Random rn = new Random();
-    int randInt = rn.nextInt(model.getPuzzleLibrarySize());
-    while (randInt == model.getActivePuzzleIndex()) {
-      randInt = rn.nextInt(model.getPuzzleLibrarySize());
-    }
-    model.setActivePuzzleIndex(randInt);
   }
   
   @Override

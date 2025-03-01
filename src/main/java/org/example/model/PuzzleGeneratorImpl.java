@@ -27,6 +27,15 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
     placeClues();
     return new PuzzleImpl(board);
   }
+  
+  @Override
+  public Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty, int row, int col) {
+    setSafeCell(row, col);
+    generateBlankBoard();
+    placeMines();
+    placeClues();
+    return new PuzzleImpl(board);
+  }
 
   @Override
   public void generateBlankBoard() {

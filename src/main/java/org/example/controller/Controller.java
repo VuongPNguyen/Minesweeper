@@ -4,13 +4,7 @@ import org.example.model.Puzzle;
 
 public interface Controller {
   /** Handles the click action to go to the next puzzle */
-  void clickNextPuzzle();
-  
-  /** Handles the click action to go to the previous puzzle */
-  void clickPrevPuzzle();
-  
-  /** Handles the click action to go to a random puzzle */
-  void clickRandPuzzle();
+  void clickNewPuzzle();
   
   /** Handles the click action to reset the currently active puzzle */
   void clickResetPuzzle();

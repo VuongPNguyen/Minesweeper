@@ -11,6 +11,12 @@ public interface PuzzleGenerator {
    * Should generate such that the user is guaranteed safety on the first click.
    */
   Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty);
+  
+  /**
+   * Generates a new Puzzle object based on the difficulty parameter.
+   * Should generate a safe cell at the cell provided by row and col.
+   */
+  Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty, int row, int col);
 
   /** Creates and assigns a new board to the instance variable to be modified. */
   void generateBlankBoard();

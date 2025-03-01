@@ -70,15 +70,9 @@ public class AppTest {
     assertEquals(8, puzzle.getClue(0, 2));
   }
 
-  private Model createTestModel(int[][] primitivePuzzle) {
-    Puzzle testPuzzle = new PuzzleImpl(primitivePuzzle);
-    PuzzleLibrary testPuzzleLibrary = new PuzzleLibraryImpl(testPuzzle);
-    return new ModelImpl(testPuzzleLibrary);
-  }
-
   @Test
   public void testModelCheckIndex() {
-    Model model = createTestModel(PUZZLE_01);
+    Model model = new ModelImpl();
     boolean check1 = false;
     try {
       model.revealCell(-1, 100, true);
@@ -90,7 +84,7 @@ public class AppTest {
 
   @Test
   public void testModelRevealCell() {
-    Model model = createTestModel(PUZZLE_01);
+    Model model = new ModelImpl();
     assertEquals(CellState.HIDE, model.getCellState(0, 0));
     model.revealCell(0, 0, true);
     assertEquals(CellState.SHOW, model.getCellState(0, 0));
@@ -107,7 +101,7 @@ public class AppTest {
 
   @Test
   public void testModelFlags() {
-    Model model = createTestModel(PUZZLE_01);
+    Model model = new ModelImpl();
     assertFalse(model.isFlag(0, 0));
     model.removeFlag(0, 0);
     assertFalse(model.isFlag(0, 0));
@@ -126,8 +120,7 @@ public class AppTest {
 
   @Test
   public void testModelResetPuzzle() {
-    int[][] blank = new int[10][9];
-    Model model = createTestModel(blank);
+    Model model = new ModelImpl();
     assertEquals(90, model.getRevealGoal());
     int puzzleHeight = model.getActivePuzzle().getHeight();
     int puzzleWidth = model.getActivePuzzle().getWidth();
@@ -149,7 +142,7 @@ public class AppTest {
 
   @Test
   public void testModelIsSolved() {
-    Model model = createTestModel(PUZZLE_01);
+    Model model = new ModelImpl();
     int puzzleHeight = model.getActivePuzzle().getHeight();
     int puzzleWidth = model.getActivePuzzle().getWidth();
     for (int r = 0; r < puzzleHeight; r++) {

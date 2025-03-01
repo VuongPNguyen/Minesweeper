@@ -21,6 +21,12 @@ public interface Model {
    * IndexOutOfBoundsException if r or c is out of bounds.
    */
   void removeFlag(int r, int c);
+  
+  /** Creates a new puzzle based on the current difficulty. */
+  void newPuzzle(int row, int col);
+  
+  /** Setter method for puzzleDifficulty */
+  void setPuzzleDifficulty(PuzzleGenerator.PuzzleDifficulty puzzleDifficulty);
 
   /**
    * Returns true only if, in the active puzzle, the cell location row r, column c is currently
@@ -49,9 +55,6 @@ public interface Model {
 
   /** Getter method for the current active Puzzle instance */
   Puzzle getActivePuzzle();
-
-  /** Getter method for the active puzzle index */
-  int getActivePuzzleIndex();
 
   /** Resets the active puzzle by removing all lamps which have been placed */
   void resetPuzzle(RenderType renderType);
