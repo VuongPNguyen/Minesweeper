@@ -1,5 +1,6 @@
 .client {
   -fx-alignment: center;
+  -fx-padding: 3;
 }
 
 .control-panel {
@@ -50,4 +51,9 @@
 .play-grid {
   -fx-alignment: center;
   -fx-background-color: transparent;
+  -fx-padding: 20;
+}
+
+.combo-box .list-cell{
+  /** -fx-background-color: default; */
 }

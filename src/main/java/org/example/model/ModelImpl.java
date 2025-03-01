@@ -24,7 +24,7 @@ public class ModelImpl implements Model {
     puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
     this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
-  
+
   public ModelImpl() {
     this(PuzzleDifficulty.MEDIUM);
   }
@@ -61,9 +61,10 @@ public class ModelImpl implements Model {
         this.revealBlankAlgorithm(r, c);
       }
       this.updateGameState();
-      if (this.isMine(r, c) && rootCell) {
-        notify(this, RenderType.TRIGGER_MINES);
-      } else if (rootCell) {
+      //      if (this.isMine(r, c) && rootCell) {
+      //        notify(this, RenderType.TRIGGER_MINES);
+      //      } else
+      if (rootCell) {
         notify(this, RenderType.CHANGE_CELL_STATE);
       }
     }
@@ -121,7 +122,7 @@ public class ModelImpl implements Model {
       notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
-  
+
   @Override
   public void newPuzzle(int row, int col) {
     puzzleGenerator.setSafeCell(row, col);
@@ -130,18 +131,29 @@ public class ModelImpl implements Model {
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
   }
-  
+
+  @Override
+  public void newPuzzle() {
+    puzzleGenerator.setSafeCell(0, 0);
+    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
+    resetPuzzle(RenderType.NEW_PUZZLE);
+    isNewPuzzle = true;
+    setGameState(GameState.PLAYING);
+  }
+
+  @Override
+  public PuzzleDifficulty getPuzzleDifficulty() {
+    return puzzleDifficulty;
+  }
+
   @Override
   public void setPuzzleDifficulty(PuzzleDifficulty puzzleDifficulty) {
-    this.puzzleDifficulty = puzzleDifficulty;
+    if (this.puzzleDifficulty != puzzleDifficulty) {
+      this.puzzleDifficulty = puzzleDifficulty;
+      this.newPuzzle();
+    }
   }
-
-  @Override
-  public boolean isRevealed(int r, int c) {
-    checkIndexInBounds(r, c);
-    return this.getCellState(r, c) == CellState.SHOW;
-  }
-
+  
   @Override
   public boolean isFlag(int r, int c) {
     checkIndexInBounds(r, c);

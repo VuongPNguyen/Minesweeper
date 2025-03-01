@@ -1,7 +1,5 @@
 package org.example.view;
 
-import static org.example.Puzzles.*;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -12,11 +10,6 @@ import org.example.model.*;
 public class AppLauncher extends Application {
   @Override
   public void start(Stage stage) {
-    PuzzleLibrary puzzleLibrary = new PuzzleLibraryImpl();
-    puzzleLibrary.addPuzzle(new PuzzleImpl(PUZZLE_01));
-    puzzleLibrary.addPuzzle(new PuzzleImpl(PUZZLE_02));
-    puzzleLibrary.addPuzzle(new PuzzleImpl(PUZZLE_03));
-
     Model model = new ModelImpl();
     Controller controller = new ControllerImpl(model);
     View view = new View(model, controller, stage);
@@ -30,6 +23,7 @@ public class AppLauncher extends Application {
     stage.setTitle("Minesweeper");
 
     stage.show();
+    stage.setX(stage.getX() - 1.5);
     stage.setMaximized(true);
   }
 }

@@ -17,19 +17,20 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
   public PuzzleGeneratorImpl(int[] safeCell, PuzzleDifficulty puzzleDifficulty) {
     this.safeCell = safeCell;
     this.setPuzzleDifficulty(puzzleDifficulty);
-    generateBlankBoard();
   }
 
   @Override
   public Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty) {
+    setPuzzleDifficulty(puzzleDifficulty);
     generateBlankBoard();
     placeMines();
     placeClues();
     return new PuzzleImpl(board);
   }
-  
+
   @Override
   public Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty, int row, int col) {
+    setPuzzleDifficulty(puzzleDifficulty);
     setSafeCell(row, col);
     generateBlankBoard();
     placeMines();

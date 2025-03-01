@@ -7,10 +7,7 @@ import java.util.Arrays;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import org.example.controller.Controller;
-import org.example.model.CellState;
-import org.example.model.CellType;
-import org.example.model.Model;
-import org.example.model.Puzzle;
+import org.example.model.*;
 
 public class PlayGrid implements FXComponent {
   private final Model model;
@@ -30,14 +27,20 @@ public class PlayGrid implements FXComponent {
     Puzzle activePuzzle = model.getActivePuzzle();
     Mine mine = new Mine(model);
     ExplodedMine explodedMine = new ExplodedMine(model);
+    WrongFlag wrongFlag = new WrongFlag(model);
+    
     for (int row = 0; row < activePuzzle.getHeight(); row++) {
       for (int col = 0; col < activePuzzle.getWidth(); col++) {
         if (model.getCellState(row, col) == CellState.HIDE) {
           Hide hide = new Hide(model, controller, row, col);
           grid.add(hide.render(), col, row);
         } else if (model.getCellState(row, col) == CellState.FLAG) {
-          Flag flag = new Flag(model, controller, row, col);
-          grid.add(flag.render(), col, row);
+          if (model.getGameState() == GameState.LOSE && !model.isMine(row, col) && model.isFlag(row, col)) {
+            grid.add(wrongFlag.render(), col, row);
+          } else {
+            Flag flag = new Flag(model, controller, row, col);
+            grid.add(flag.render(), col, row);
+          }
         } else if (model.getCellState(row, col) == CellState.SHOW) {
           if (activePuzzle.getCellType(row, col) == CellType.MINE) {
             if (Arrays.equals(model.getExplodedMine(), new int[] {row, col})) {

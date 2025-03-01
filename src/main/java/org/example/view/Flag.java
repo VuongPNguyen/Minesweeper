@@ -1,15 +1,14 @@
 package org.example.view;
 
+import static org.example.view.ViewConstants.*;
+import static org.example.view.ViewConstants.gridGap;
+
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import org.example.controller.Controller;
 import org.example.model.Model;
-
-import static org.example.view.ViewConstants.*;
-import static org.example.view.ViewConstants.gridGap;
 
 public class Flag implements FXComponent {
   private final Model model;
@@ -34,11 +33,10 @@ public class Flag implements FXComponent {
     cellSize -= gridGap + gridGap / Math.min(puzzleHeight, puzzleWidth);
     background.setMinSize(cellSize, cellSize);
     background.setMaxSize(cellSize, cellSize);
-
-    ImageView flagImage = new ImageView(new Image("flag.png"));
-    flagImage.setFitWidth(cellSize - 10);
-    flagImage.setFitHeight(cellSize - 10);
-    background.getChildren().add(flagImage);
+    
+    Label flag = new Label("⚑");
+    background.getChildren().add(flag);
+    background.setStyle("-fx-font-size: " + cellSize);
 
     background.setOnMouseClicked(
         e -> {

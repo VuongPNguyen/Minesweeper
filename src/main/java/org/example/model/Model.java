@@ -1,5 +1,7 @@
 package org.example.model;
 
+import org.example.model.PuzzleGenerator.PuzzleDifficulty;
+
 public interface Model {
   /**
    * Reveals the cell if not revealed yet in the active puzzle in the cell at row r, column c.
@@ -21,20 +23,19 @@ public interface Model {
    * IndexOutOfBoundsException if r or c is out of bounds.
    */
   void removeFlag(int r, int c);
-  
+
   /** Creates a new puzzle based on the current difficulty. */
   void newPuzzle(int row, int col);
-  
+
+  /** Creates a new puzzle based on the current difficulty. */
+  void newPuzzle();
+
+  /** Getter method for puzzleDifficulty */
+  PuzzleDifficulty getPuzzleDifficulty();
+
   /** Setter method for puzzleDifficulty */
-  void setPuzzleDifficulty(PuzzleGenerator.PuzzleDifficulty puzzleDifficulty);
-
-  /**
-   * Returns true only if, in the active puzzle, the cell location row r, column c is currently
-   * revealed. If the cell itself contains a flag, this method should return false. Throws an
-   * IndexOutOfBoundsException if r or c is out of bounds.
-   */
-  boolean isRevealed(int r, int c);
-
+  void setPuzzleDifficulty(PuzzleDifficulty puzzleDifficulty);
+  
   /**
    * Returns true only if, in the active puzzle, the cell at row r, column c contains a user-placed
    * flag. Throws an IndexOutOfBoundsException if r or c is out of bounds.
