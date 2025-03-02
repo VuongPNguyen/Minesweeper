@@ -52,7 +52,7 @@ public class PlayGrid implements FXComponent {
             Blank blank = new Blank(model);
             grid.add(blank.render(), col, row);
           } else if (activePuzzle.getCellType(row, col) == CellType.CLUE) {
-            Clue clue = new Clue(model, row, col);
+            Clue clue = new Clue(model, controller, row, col);
             grid.add(clue.render(), col, row);
           }
         }

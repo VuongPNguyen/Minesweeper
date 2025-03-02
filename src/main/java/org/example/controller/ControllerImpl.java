@@ -32,7 +32,12 @@ public class ControllerImpl implements Controller {
   public void clickCell(int r, int c) {
     model.revealCell(r, c, true);
   }
-
+  
+  @Override
+  public void revealAdjacentCells(int r, int c) {
+    model.revealAdjacentCells(r, c);
+  }
+  
   @Override
   public void toggleFlagCell(int r, int c) {
     if (model.isFlag(r, c)) {

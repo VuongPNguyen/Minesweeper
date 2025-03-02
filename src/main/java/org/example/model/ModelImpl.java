@@ -61,9 +61,6 @@ public class ModelImpl implements Model {
         this.revealBlankAlgorithm(r, c);
       }
       this.updateGameState();
-      //      if (this.isMine(r, c) && rootCell) {
-      //        notify(this, RenderType.TRIGGER_MINES);
-      //      } else
       if (rootCell) {
         notify(this, RenderType.CHANGE_CELL_STATE);
       }
@@ -86,7 +83,8 @@ public class ModelImpl implements Model {
     }
   }
 
-  private void revealAllMines() {
+  @Override
+  public void revealAllMines() {
     Puzzle activePuzzle = this.getActivePuzzle();
     int puzzleHeight = activePuzzle.getHeight();
     int puzzleWidth = activePuzzle.getWidth();
@@ -94,6 +92,34 @@ public class ModelImpl implements Model {
       for (int c = 0; c < puzzleWidth; c++) {
         if (activePuzzle.getCellType(r, c) == CellType.MINE) {
           this.revealCell(r, c, false);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void revealAdjacentCells(int r, int c) {
+    checkIndexInBounds(r, c);
+    if (!isClue(r, c)) {
+      throw new IllegalArgumentException("This cell is not a clue");
+    }
+    // Check if flags satisfy clue.
+    int flagCount = 0;
+    for (int row = r - 1; row <= r + 1; row++) {
+      for (int col = c - 1; col <= c + 1; col++) {
+        if (row >= 0 && row < puzzle.getHeight() && col >= 0 && col < puzzle.getWidth()) {
+          if (isFlag(row, col)) {
+            flagCount++;
+          }
+        }
+      }
+    }
+    if (flagCount == puzzle.getClue(r, c)) {
+      for (int row = r - 1; row <= r + 1; row++) {
+        for (int col = c - 1; col <= c + 1; col++) {
+          if (row >= 0 && row < puzzle.getHeight() && col >= 0 && col < puzzle.getWidth()) {
+            revealCell(row, col, true);
+          }
         }
       }
     }
@@ -153,7 +179,7 @@ public class ModelImpl implements Model {
       this.newPuzzle();
     }
   }
-  
+
   @Override
   public boolean isFlag(int r, int c) {
     checkIndexInBounds(r, c);
@@ -164,6 +190,12 @@ public class ModelImpl implements Model {
   public boolean isMine(int r, int c) {
     checkIndexInBounds(r, c);
     return getActivePuzzle().getCellType(r, c) == CellType.MINE;
+  }
+
+  @Override
+  public boolean isClue(int r, int c) {
+    checkIndexInBounds(r, c);
+    return getActivePuzzle().getCellType(r, c) == CellType.CLUE;
   }
 
   @Override

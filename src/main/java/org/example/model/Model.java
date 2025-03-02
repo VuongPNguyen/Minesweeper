@@ -11,7 +11,13 @@ public interface Model {
 
   /** Reveals all adjacent cells if the initial cell is a BLANK. */
   void revealBlankAlgorithm(int r, int c);
-
+  
+  /** Reveals all mines in the puzzle. */
+  void revealAllMines();
+  
+  /** Reveals all adjacent cells if flags satisfy the clues. */
+  void revealAdjacentCells(int r, int c);
+  
   /**
    * Adds a flag if one doesn't already exist to the active puzzle in the cell at row r, column c.
    * Throws an IndexOutOfBoundsException if r or c is out of bounds.
@@ -47,6 +53,12 @@ public interface Model {
    * an IndexOutOfBoundsException if r or c is out of bounds.
    */
   boolean isMine(int r, int c);
+  
+  /**
+   * Returns true only if, in the active puzzle, the cell at row r, column c contains a clue. Throws
+   * an IndexOutOfBoundsException if r or c is out of bounds.
+   */
+  boolean isClue(int r, int c);
 
   /**
    * Getter method for the state of the cell at row r, column c. Throws an IndexOutOfBounds

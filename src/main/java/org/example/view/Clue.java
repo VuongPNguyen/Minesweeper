@@ -1,18 +1,22 @@
 package org.example.view;
 
+import static org.example.view.ViewConstants.*;
+
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
+import org.example.controller.Controller;
 import org.example.model.Model;
-
-import static org.example.view.ViewConstants.*;
 
 public class Clue implements FXComponent {
   private final Model model;
+  private final Controller controller;
   private final int row, col;
 
-  public Clue(Model model, int row, int col) {
+  public Clue(Model model, Controller controller, int row, int col) {
     this.model = model;
+    this.controller = controller;
     this.row = row;
     this.col = col;
   }
@@ -59,6 +63,14 @@ public class Clue implements FXComponent {
         clueLabel.setStyle("-fx-text-fill: gray");
         break;
     }
+    
+    background.setOnMouseClicked(
+        e -> {
+          if (e.getButton() == MouseButton.PRIMARY) { // May also use MIDDLE
+            controller.revealAdjacentCells(row, col);
+          }
+        });
+    
     background.getChildren().add(clueLabel);
 
     return background;

@@ -15,6 +15,9 @@ public interface Controller {
   /** Handles the click event on the cell at row r, column c */
   void clickCell(int r, int c);
   
+  /** Handles the click event for revealing adjacent cells if flags satisfy the clue. */
+  void revealAdjacentCells(int r, int c);
+  
   /** Handles the right click event on the cell at row r, column c */
   void toggleFlagCell(int r, int c);
 }
