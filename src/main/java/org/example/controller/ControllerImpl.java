@@ -22,7 +22,12 @@ public class ControllerImpl implements Controller {
       model.setPuzzleDifficulty(puzzleDifficulty);
     }
   }
-
+  
+  @Override
+  public void setPuzzleParameters(int height, int width, int mineCount) {
+    model.setPuzzleParameters(height, width, mineCount);
+  }
+  
   @Override
   public void clickResetPuzzle() {
     model.resetPuzzle(RenderType.CHANGE_CELL_STATE);
@@ -46,4 +51,5 @@ public class ControllerImpl implements Controller {
       model.addFlag(r, c);
     }
   }
+  
 }

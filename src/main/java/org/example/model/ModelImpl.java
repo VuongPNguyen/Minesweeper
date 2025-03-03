@@ -10,7 +10,7 @@ public class ModelImpl implements Model {
   private int revealGoal;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
   private GameState gameState;
-  private int[] explodedMine = new int[] {-1, -1};
+  private Coordinate explodedMine;
   private final PuzzleGenerator puzzleGenerator;
   private PuzzleDifficulty puzzleDifficulty;
   private boolean isNewPuzzle = true;
@@ -20,7 +20,7 @@ public class ModelImpl implements Model {
       throw new IllegalArgumentException("puzzleDifficulty is not valid");
     }
     this.puzzleDifficulty = puzzleDifficulty;
-    puzzleGenerator = new PuzzleGeneratorImpl(new int[] {0, 0});
+    puzzleGenerator = new PuzzleGeneratorImpl(new CoordinateImpl(0, 0));
     puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
     this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
@@ -51,7 +51,7 @@ public class ModelImpl implements Model {
       cellStateMap[r][c] = CellState.SHOW;
       if (this.isMine(r, c) && rootCell) {
         revealAllMines();
-        setExplodedMine(new int[] {r, c});
+        setExplodedMine(r, c);
         setGameState(GameState.LOSE);
       } else {
         revealGoal--;
@@ -154,17 +154,24 @@ public class ModelImpl implements Model {
 
   @Override
   public void newPuzzle(int row, int col) {
-    puzzleGenerator.setSafeCell(row, col);
-    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
+    puzzle = puzzleGenerator.generateRandomPuzzle(new CoordinateImpl(row, col));
     resetPuzzle(RenderType.NEW_PUZZLE);
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
   }
-
+  
+  @Override
+  public void newPuzzle(PuzzleDifficulty puzzleDifficulty) {
+    this.puzzleDifficulty = puzzleDifficulty;
+    puzzle = puzzleGenerator.generateRandomPuzzle(getPuzzleDifficulty(), new CoordinateImpl(0, 0));
+    resetPuzzle(RenderType.NEW_PUZZLE);
+    isNewPuzzle = true;
+    setGameState(GameState.PLAYING);
+  }
+  
   @Override
   public void newPuzzle() {
-    puzzleGenerator.setSafeCell(0, 0);
-    puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
+    puzzle = puzzleGenerator.generateRandomPuzzle(new CoordinateImpl(0, 0));
     resetPuzzle(RenderType.NEW_PUZZLE);
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
@@ -178,8 +185,7 @@ public class ModelImpl implements Model {
   @Override
   public void setPuzzleDifficulty(PuzzleDifficulty puzzleDifficulty) {
     if (this.puzzleDifficulty != puzzleDifficulty) {
-      this.puzzleDifficulty = puzzleDifficulty;
-      this.newPuzzle();
+      this.newPuzzle(puzzleDifficulty);
     }
   }
 
@@ -215,8 +221,8 @@ public class ModelImpl implements Model {
   @Override
   public void resetPuzzle(RenderType renderType) {
     revealGoal = 0;
-    int puzzleHeight = this.getActivePuzzle().getHeight();
-    int puzzleWidth = this.getActivePuzzle().getWidth();
+    int puzzleHeight = puzzleGenerator.getHeight();
+    int puzzleWidth = puzzleGenerator.getWidth();
     cellStateMap = new CellState[puzzleHeight][puzzleWidth];
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
@@ -268,11 +274,22 @@ public class ModelImpl implements Model {
     }
   }
 
-  public int[] getExplodedMine() {
+  public Coordinate getExplodedMine() {
     return explodedMine;
   }
-
-  public void setExplodedMine(int[] coordinates) {
-    this.explodedMine = coordinates;
+  
+  public void setExplodedMine(int row, int col) {
+    this.explodedMine = new CoordinateImpl(row, col);
+  }
+  
+  @Override
+  public void setPuzzleParameters(int height, int width, int mineCount) {
+    puzzleGenerator.setPuzzleParameters(height, width, mineCount);
+    this.newPuzzle();
+  }
+  
+  @Override
+  public int getMineCount() {
+    return puzzleGenerator.getMineCount();
   }
 }

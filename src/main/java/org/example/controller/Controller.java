@@ -9,6 +9,9 @@ public interface Controller {
   /** Handles the action to set the puzzle difficulty */
   void setDifficulty(PuzzleDifficulty puzzleDifficulty);
   
+  /** Handles setting puzzle parameters for custom puzzles. */
+  void setPuzzleParameters(int height, int width, int mineCount);
+  
   /** Handles the click action to reset the currently active puzzle */
   void clickResetPuzzle();
   

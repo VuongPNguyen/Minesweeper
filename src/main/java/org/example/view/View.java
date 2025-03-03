@@ -60,11 +60,15 @@ public class View implements FXComponent, ModelObserver {
     vBox.setMaxHeight(MaxScreenHeight);
     vBox.setMaxWidth(MaxScreenWidth);
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
+    vBox.setPrefHeight(screen.getHeight() - 20);
 
     switch (renderType) {
       case NEW_PUZZLE -> {
         // Re-render
         vBox.getChildren().add(puzzleControlPanel);
+        
+        CustomPuzzlePanel customPuzzlePanel = new CustomPuzzlePanel(model, controller);
+        vBox.getChildren().add(customPuzzlePanel.render());
 
         puzzleArea = new StackPane();
 
@@ -76,6 +80,9 @@ public class View implements FXComponent, ModelObserver {
       }
       case CHANGE_CELL_STATE -> {
         vBox.getChildren().add(puzzleControlPanel);
+        
+        CustomPuzzlePanel customPuzzlePanel = new CustomPuzzlePanel(model, controller);
+        vBox.getChildren().add(customPuzzlePanel.render());
 
         puzzleArea = new StackPane();
         
@@ -88,6 +95,9 @@ public class View implements FXComponent, ModelObserver {
       }
       case END_GAME -> {
         vBox.getChildren().add(puzzleControlPanel);
+        
+        CustomPuzzlePanel customPuzzlePanel = new CustomPuzzlePanel(model, controller);
+        vBox.getChildren().add(customPuzzlePanel.render());
         
         puzzleArea = new StackPane();
         Node playGrid = new PlayGrid(model, controller).render();

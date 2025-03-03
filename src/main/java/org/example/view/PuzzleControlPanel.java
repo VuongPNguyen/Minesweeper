@@ -24,7 +24,7 @@ public class PuzzleControlPanel implements FXComponent {
 
     ObservableList<PuzzleDifficulty> puzzleDifficultiesList =
         FXCollections.observableArrayList(
-            PuzzleDifficulty.EASY, PuzzleDifficulty.MEDIUM, PuzzleDifficulty.HARD);
+            PuzzleDifficulty.EASY, PuzzleDifficulty.MEDIUM, PuzzleDifficulty.HARD, PuzzleDifficulty.CUSTOM);
     ComboBox<PuzzleDifficulty> difficultyComboBox = new ComboBox<>(puzzleDifficultiesList);
     difficultyComboBox.setValue(PuzzleDifficulty.MEDIUM);
     difficultyComboBox.setOnAction(_ -> controller.setDifficulty(difficultyComboBox.getValue()));

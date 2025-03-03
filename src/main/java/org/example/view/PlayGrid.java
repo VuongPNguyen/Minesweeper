@@ -1,13 +1,11 @@
 package org.example.view;
 
-import static org.example.view.ViewConstants.MaxScreenHeight;
-import static org.example.view.ViewConstants.gridGap;
-
-import java.util.Arrays;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import org.example.controller.Controller;
 import org.example.model.*;
+
+import static org.example.view.ViewConstants.*;
 
 public class PlayGrid implements FXComponent {
   private final Model model;
@@ -23,6 +21,7 @@ public class PlayGrid implements FXComponent {
     GridPane grid = new GridPane();
     grid.getStyleClass().add("play-grid");
     grid.setMaxHeight(MaxScreenHeight);
+    grid.setMaxWidth(MaxScreenWidth - 50);
 
     Puzzle activePuzzle = model.getActivePuzzle();
     Mine mine = new Mine(model);
@@ -43,7 +42,8 @@ public class PlayGrid implements FXComponent {
           }
         } else if (model.getCellState(row, col) == CellState.SHOW) {
           if (activePuzzle.getCellType(row, col) == CellType.MINE) {
-            if (Arrays.equals(model.getExplodedMine(), new int[] {row, col})) {
+            Coordinate trippedMine = model.getExplodedMine();
+            if (trippedMine.row() == row && trippedMine.col() == col) {
               grid.add(explodedMine.render(), col, row);
             } else {
               grid.add(mine.render(), col, row);

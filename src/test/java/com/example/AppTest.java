@@ -82,7 +82,7 @@ public class AppTest {
 
   @Test
   public void testPuzzleGenerator() {
-    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new int[] {4, 4}, EASY);
+    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new CoordinateImpl(4, 4), EASY);
     puzzleGeneratorImpl.generateBlankBoard();
     for (int row = 0; row < puzzleGeneratorImpl.getBoard().length; row++) {
       for (int col = 0; col < puzzleGeneratorImpl.getBoard()[0].length; col++) {
@@ -93,7 +93,7 @@ public class AppTest {
 
   @Test
   public void testPuzzleGeneratorMinePlacement() {
-    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new int[] {0, 0}, EASY);
+    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new CoordinateImpl(0, 0), EASY);
 
     for (int i = 0; i < 10; i++) {
       puzzleGeneratorImpl.generateBlankBoard();
@@ -116,7 +116,7 @@ public class AppTest {
 
     for (int i = 0; i < 3; i++) {
       PuzzleGeneratorImpl puzzleGeneratorImpl =
-          new PuzzleGeneratorImpl(new int[] {4, 4}, difficulties[i]);
+          new PuzzleGeneratorImpl(new CoordinateImpl(4, 4), difficulties[i]);
       puzzleGeneratorImpl.generateBlankBoard();
       puzzleGeneratorImpl.placeMines();
       puzzleGeneratorImpl.placeClues();

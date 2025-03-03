@@ -32,7 +32,10 @@ public interface Model {
 
   /** Creates a new puzzle based on the current difficulty. */
   void newPuzzle(int row, int col);
-
+  
+  /** Creates a new puzzle based on the difficulty parameter. */
+  void newPuzzle(PuzzleDifficulty puzzleDifficulty);
+  
   /** Creates a new puzzle based on the current difficulty. */
   void newPuzzle();
 
@@ -91,8 +94,13 @@ public interface Model {
   void removeObserver(ModelObserver observer);
 
   /** Getter method for coordinates of tripped mines. */
-  int[] getExplodedMine();
-
-  /** Setter method for coordinates of tripped mines. */
-  void setExplodedMine(int[] coordinates);
+  Coordinate getExplodedMine();
+  
+  /** Setter method for coordinates of tripped mine using row and col values. */
+  void setExplodedMine(int r, int c);
+  
+  /** Setter method for puzzle parameters. */
+  void setPuzzleParameters(int height, int width, int mineCount);
+  
+  int getMineCount();
 }
