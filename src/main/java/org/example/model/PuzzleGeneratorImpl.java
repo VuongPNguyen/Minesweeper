@@ -193,8 +193,12 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
   public void setPuzzleParameters(int height, int width, int mineCount) {
     // Check negative inputs
     this.boardHeight = Math.max(height, 1);
-    this.boardWidth = Math.max(width, 1);
     this.mineCount = Math.max(mineCount, 0);
+
+    // Keep maximum viable puzzle ratio
+    double maxPuzzleWidth = height * 1.75;
+    this.boardWidth = Math.max((int) Math.min(maxPuzzleWidth, width), 1);
+
     // Check mines is viable.
     int numCells = boardHeight * boardWidth;
     if (this.mineCount >= numCells) {
