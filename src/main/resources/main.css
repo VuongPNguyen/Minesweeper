@@ -7,6 +7,23 @@
   -fx-alignment: center;
 }
 
+.game-end {
+  -fx-alignment: center;
+  -fx-opacity: 1;
+}
+
+.game-end-background {
+  -fx-alignment: center;
+  -fx-background-color: silver;
+  -fx-opacity: 0.75;
+}
+
+.game-end-panel {
+  -fx-alignment: center;
+  -fx-opacity: 1;
+  -fx-background-color: white;
+}
+
 .cell {
   -fx-alignment: center;
   -fx-background-color: lavender;

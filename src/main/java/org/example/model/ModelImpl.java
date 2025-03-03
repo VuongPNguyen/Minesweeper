@@ -64,6 +64,9 @@ public class ModelImpl implements Model {
       if (rootCell) {
         notify(this, RenderType.CHANGE_CELL_STATE);
       }
+      if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
+        notify(this, RenderType.END_GAME);
+      }
     }
   }
 

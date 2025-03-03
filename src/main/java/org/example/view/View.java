@@ -16,7 +16,7 @@ public class View implements FXComponent, ModelObserver {
   private final Stage stage;
   // FXComponent Nodes
   private final Node puzzleControlPanel;
-  private StackPane puzzleArea = new StackPane();
+  private StackPane puzzleArea;
   
   public View(Model model, Controller controller, Stage stage) {
     this.model = model;
@@ -25,6 +25,7 @@ public class View implements FXComponent, ModelObserver {
 
     // FXComponents
     puzzleControlPanel = new PuzzleControlPanel(controller).render();
+    puzzleArea = new StackPane();
   }
 
   public void update(Model model, RenderType renderType) {
@@ -41,11 +42,7 @@ public class View implements FXComponent, ModelObserver {
     vBox.setMaxHeight(MaxScreenHeight);
     vBox.setMaxWidth(MaxScreenWidth);
     vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
-
-    /**
-     * USE LATER if (model.getGameState() == GameState.LOSE) { } else if (model.getGameState() ==
-     * GameState.WIN) { }
-     */
+    
     puzzleArea = new StackPane();
 
     PlayGrid playGrid = new PlayGrid(model, controller);
@@ -77,7 +74,7 @@ public class View implements FXComponent, ModelObserver {
         vBox.getChildren().add(puzzleArea);
         return vBox;
       }
-      case CHANGE_CELL_STATE, TRIGGER_MINES -> {
+      case CHANGE_CELL_STATE -> {
         vBox.getChildren().add(puzzleControlPanel);
 
         puzzleArea = new StackPane();
@@ -87,6 +84,20 @@ public class View implements FXComponent, ModelObserver {
 
         vBox.getChildren().add(puzzleArea);
 
+        return vBox;
+      }
+      case END_GAME -> {
+        vBox.getChildren().add(puzzleControlPanel);
+        
+        puzzleArea = new StackPane();
+        Node playGrid = new PlayGrid(model, controller).render();
+        puzzleArea.getChildren().add(playGrid);
+        
+        GameEndPanel gameEndPanel = new GameEndPanel(model, controller);
+        puzzleArea.getChildren().add(gameEndPanel.render());
+        
+        vBox.getChildren().add(puzzleArea);
+        
         return vBox;
       }
     }
