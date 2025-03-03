@@ -18,7 +18,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
     this.safeCell = safeCell;
     this.setPuzzleDifficulty(puzzleDifficulty);
   }
-  
+
   @Override
   public Puzzle generateRandomPuzzle(CoordinateImpl coordinate) {
     setSafeCell(coordinate);
@@ -27,7 +27,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
     placeClues();
     return new PuzzleImpl(board);
   }
-  
+
   @Override
   public Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty) {
     setPuzzleDifficulty(puzzleDifficulty);
@@ -46,7 +46,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
     placeClues();
     return new PuzzleImpl(board);
   }
-  
+
   @Override
   public void generateBlankBoard() {
     int[][] tempBoard = new int[boardHeight][boardWidth];
@@ -63,14 +63,56 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
   @Override
   public void placeMines() {
     Random random = new Random();
-    for (int currentMines = 0; currentMines < getMineCount(); currentMines++) {
-      int mineRow = random.nextInt(boardHeight);
-      int mineCol = random.nextInt(boardWidth);
-      while (board[mineRow][mineCol] == 9 || checkSafeCellAdjacency(mineRow, mineCol)) {
-        mineRow = random.nextInt(boardHeight);
-        mineCol = random.nextInt(boardWidth);
+    if (getMineCount() < boardHeight * boardWidth - 8) {
+      for (int currentMines = 0; currentMines < getMineCount(); currentMines++) {
+        int mineRow = random.nextInt(boardHeight);
+        int mineCol = random.nextInt(boardWidth);
+        while (board[mineRow][mineCol] == 9 || checkSafeCellAdjacency(mineRow, mineCol)) {
+          mineRow = random.nextInt(boardHeight);
+          mineCol = random.nextInt(boardWidth);
+        }
+        board[mineRow][mineCol] = 9;
       }
-      board[mineRow][mineCol] = 9;
+    } else {
+      // Place mines in all non-adjacent cells.
+      for (int row = 0; row < boardHeight; row++) {
+        for (int col = 0; col < boardWidth; col++) {
+          if (!checkSafeCellAdjacency(row, col)) {
+            board[row][col] = 9;
+          }
+        }
+      }
+
+      // Count adjacent cells.
+      int adjacentCells = 0;
+      for (int r = getSafeCell().row() - 1; r <= getSafeCell().row() + 1; r++) {
+        for (int c = getSafeCell().col() - 1; c <= getSafeCell().col() + 1; c++) {
+          if (r >= 0 && r < this.getHeight() && c >= 0 && c < this.getWidth()) {
+            if (r != getSafeCell().row() || c != getSafeCell().col()) {
+              adjacentCells++;
+            }
+          }
+        }
+      }
+
+      // Randomly select adjacent cell for mine placement.
+      int tempMineCount = boardHeight * boardWidth - adjacentCells;
+      tempMineCount = getMineCount() + 1 - tempMineCount;
+      for (int currentMines = 0; currentMines < tempMineCount; currentMines++) {
+        int mineRow = random.nextInt(safeCell.row() - 1, safeCell.row() + 2);
+        int mineCol = random.nextInt(safeCell.col() - 1, safeCell.col() + 2);
+
+        while (mineRow < 0
+            || mineRow >= this.getHeight()
+            || mineCol < 0
+            || mineCol >= this.getWidth()
+            || board[mineRow][mineCol] == 9
+            || (mineRow == safeCell.row() && mineCol == safeCell.col())) {
+          mineRow = random.nextInt(safeCell.row() - 1, safeCell.row() + 2);
+          mineCol = random.nextInt(safeCell.col() - 1, safeCell.col() + 2);
+        }
+        board[mineRow][mineCol] = 9;
+      }
     }
   }
 
@@ -156,20 +198,20 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
     // Check mines is viable.
     int numCells = boardHeight * boardWidth;
     if (this.mineCount >= numCells) {
-      this.mineCount = numCells - 9;
+      this.mineCount = numCells - 1;
     }
   }
-  
+
   @Override
   public int getHeight() {
     return boardHeight;
   }
-  
+
   @Override
   public int getWidth() {
     return boardWidth;
   }
-  
+
   @Override
   public int getMineCount() {
     return mineCount;

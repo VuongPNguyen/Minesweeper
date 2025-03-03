@@ -53,7 +53,7 @@ public class ModelImpl implements Model {
         revealAllMines();
         setExplodedMine(r, c);
         setGameState(GameState.LOSE);
-      } else {
+      } else if (!this.isMine(r, c)) {
         revealGoal--;
       }
       Puzzle activePuzzle = this.getActivePuzzle();
