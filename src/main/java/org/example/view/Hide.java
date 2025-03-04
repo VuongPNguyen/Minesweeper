@@ -25,8 +25,8 @@ public class Hide implements FXComponent {
     StackPane background = new StackPane();
     background.getStyleClass().add("hide");
 
-    int puzzleHeight = model.getActivePuzzle().getHeight();
-    int puzzleWidth = model.getActivePuzzle().getWidth();
+    int puzzleHeight = model.getPuzzle().getHeight();
+    int puzzleWidth = model.getPuzzle().getWidth();
     double cellSize = Math.min(MaxScreenHeight / puzzleHeight, MaxScreenWidth / puzzleWidth);
     cellSize -= gridGap + gridGap / Math.min(puzzleHeight, puzzleWidth);
     background.setMinSize(cellSize, cellSize);

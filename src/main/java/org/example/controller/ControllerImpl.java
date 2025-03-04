@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.model.CoordinateImpl;
 import org.example.model.Model;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 import org.example.model.RenderType;
@@ -45,7 +46,7 @@ public class ControllerImpl implements Controller {
   
   @Override
   public void toggleFlagCell(int r, int c) {
-    if (model.isFlag(r, c)) {
+    if (model.isFlag(new CoordinateImpl(r, c))) {
       model.removeFlag(r, c);
     } else {
       model.addFlag(r, c);

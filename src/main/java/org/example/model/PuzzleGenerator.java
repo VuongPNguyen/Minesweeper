@@ -13,7 +13,7 @@ public interface PuzzleGenerator {
    * Generates a new Puzzle object based on the current difficulty parameter.
    * Should generate such that the user is guaranteed safety on the first click.
    */
-  Puzzle generateRandomPuzzle(CoordinateImpl coordinate);
+  Puzzle generateRandomPuzzle(Coordinate coordinate);
 
   /**
    * Generates a new Puzzle object based on the difficulty parameter.

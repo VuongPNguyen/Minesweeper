@@ -20,7 +20,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
   }
 
   @Override
-  public Puzzle generateRandomPuzzle(CoordinateImpl coordinate) {
+  public Puzzle generateRandomPuzzle(Coordinate coordinate) {
     setSafeCell(coordinate);
     generateBlankBoard();
     placeMines();

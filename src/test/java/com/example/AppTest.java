@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import org.example.model.*;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
+import org.example.model.CellStateMap.CellState;
 import org.junit.Test;
 
 public class AppTest {
@@ -25,9 +26,10 @@ public class AppTest {
   @Test
   public void testModelRevealCell() {
     Model model = new ModelImpl();
-    assertEquals(CellState.HIDE, model.getCellState(0, 0));
+    Coordinate origin = new CoordinateImpl(0, 0);
+    assertEquals(CellState.HIDE, model.getCellState(origin));
     model.revealCell(0, 0, true);
-    assertEquals(CellState.SHOW, model.getCellState(0, 0));
+    assertEquals(CellState.SHOW, model.getCellState(origin));
     model.resetPuzzle(TEST);
     //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
     //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
@@ -42,39 +44,40 @@ public class AppTest {
   @Test
   public void testModelFlags() {
     Model model = new ModelImpl();
-    assertFalse(model.isFlag(0, 0));
+    Coordinate origin = new CoordinateImpl(0, 0);
+    assertFalse(model.isFlag(origin));
     model.removeFlag(0, 0);
-    assertFalse(model.isFlag(0, 0));
+    assertFalse(model.isFlag(origin));
     model.addFlag(0, 0);
-    assertTrue(model.isFlag(0, 0));
+    assertTrue(model.isFlag(origin));
     model.addFlag(0, 0);
-    assertTrue(model.isFlag(0, 0));
+    assertTrue(model.isFlag(origin));
     model.removeFlag(0, 0);
-    assertFalse(model.isFlag(0, 0));
+    assertFalse(model.isFlag(origin));
     // Testing flagging a revealed cell.
-    assertEquals(CellState.HIDE, model.getCellState(0, 0));
+    assertTrue(model.isHide(origin));
     model.revealCell(0, 0, true);
     model.addFlag(0, 0);
-    assertEquals(CellState.SHOW, model.getCellState(0, 0));
+    assertTrue(model.isFlag(origin));
   }
 
   @Test
   public void testModelResetPuzzle() {
     Model model = new ModelImpl();
     assertEquals(90, model.getRevealGoal());
-    int puzzleHeight = model.getActivePuzzle().getHeight();
-    int puzzleWidth = model.getActivePuzzle().getWidth();
+    int puzzleHeight = model.getPuzzle().getHeight();
+    int puzzleWidth = model.getPuzzle().getWidth();
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
         model.revealCell(r, c, true);
-        assertEquals(CellState.SHOW, model.getCellState(r, c));
+        assertTrue(model.isShow(new CoordinateImpl(r, c)));
       }
     }
     assertEquals(0, model.getRevealGoal());
     model.resetPuzzle(TEST);
     for (int r = 0; r < puzzleHeight; r++) {
       for (int c = 0; c < puzzleWidth; c++) {
-        assertEquals(CellState.HIDE, model.getCellState(r, c));
+        assertTrue(model.isHide(new CoordinateImpl(r, c)));
       }
     }
     assertEquals(90, model.getRevealGoal());

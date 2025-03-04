@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.model.Coordinate;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 
 public interface Controller {
@@ -16,11 +17,11 @@ public interface Controller {
   void clickResetPuzzle();
   
   /** Handles the click event on the cell at row r, column c */
-  void clickCell(int r, int c);
+  void clickCell(Coordinate c);
   
   /** Handles the click event for revealing adjacent cells if flags satisfy the clue. */
-  void revealAdjacentCells(int r, int c);
+  void revealAdjacentCells(Coordinate c);
   
   /** Handles the right click event on the cell at row r, column c */
-  void toggleFlagCell(int r, int c);
+  void toggleFlagCell(Coordinate c);
 }

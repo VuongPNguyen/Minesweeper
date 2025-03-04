@@ -28,13 +28,13 @@ public class CustomPuzzlePanel implements FXComponent {
     
     TextField puzzleHeightField = new TextField();
     puzzleHeightField.setPromptText("1-99");
-    puzzleHeightField.setText(String.valueOf(model.getActivePuzzle().getHeight()));
+    puzzleHeightField.setText(String.valueOf(model.getPuzzle().getHeight()));
     puzzleHeightField.setMaxWidth(40);
     
     if (model.getPuzzleDifficulty() == PuzzleGenerator.PuzzleDifficulty.CUSTOM) {
       customPuzzlePanel.getChildren().add(puzzleHeightField);
     } else {
-      Label puzzleHeightLabel = new Label(String.valueOf(model.getActivePuzzle().getHeight()));
+      Label puzzleHeightLabel = new Label(String.valueOf(model.getPuzzle().getHeight()));
       puzzleHeightLabel.setMaxWidth(40);
 
       customPuzzlePanel.getChildren().add(puzzleHeightLabel);
@@ -47,13 +47,13 @@ public class CustomPuzzlePanel implements FXComponent {
     
     TextField puzzleWidthField = new TextField();
     puzzleWidthField.setPromptText("1-99");
-    puzzleWidthField.setText(String.valueOf(model.getActivePuzzle().getWidth()));
+    puzzleWidthField.setText(String.valueOf(model.getPuzzle().getWidth()));
     puzzleWidthField.setMaxWidth(40);
     
     if (model.getPuzzleDifficulty() == PuzzleGenerator.PuzzleDifficulty.CUSTOM) {
       customPuzzlePanel.getChildren().add(puzzleWidthField);
     } else {
-      Label puzzleWidthLabel = new Label(String.valueOf(model.getActivePuzzle().getWidth()));
+      Label puzzleWidthLabel = new Label(String.valueOf(model.getPuzzle().getWidth()));
       puzzleWidthLabel.setMaxWidth(40);
 
       customPuzzlePanel.getChildren().add(puzzleWidthLabel);

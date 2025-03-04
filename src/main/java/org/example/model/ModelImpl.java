@@ -2,16 +2,17 @@ package org.example.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.example.model.CellStateMap.CellState;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 
 public class ModelImpl implements Model {
-  private Puzzle puzzle;
-  private CellState[][] cellStateMap;
-  private int revealGoal;
+  private final CellStateMap cellStateMap;
   private final List<ModelObserver> modelObserverList = new ArrayList<>();
+  private final PuzzleGenerator puzzleGenerator;
+  private Puzzle puzzle;
+  private int revealGoal;
   private GameState gameState;
   private Coordinate explodedMine;
-  private final PuzzleGenerator puzzleGenerator;
   private PuzzleDifficulty puzzleDifficulty;
   private boolean isNewPuzzle = true;
 
@@ -22,6 +23,7 @@ public class ModelImpl implements Model {
     this.puzzleDifficulty = puzzleDifficulty;
     puzzleGenerator = new PuzzleGeneratorImpl(new CoordinateImpl(0, 0));
     puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
+    cellStateMap = new CellStateMapImpl(puzzle.getHeight(), puzzle.getWidth());
     this.resetPuzzle(RenderType.NEW_PUZZLE);
   }
 
@@ -29,36 +31,35 @@ public class ModelImpl implements Model {
     this(PuzzleDifficulty.MEDIUM);
   }
 
-  public void checkIndexInBounds(int r, int c) {
-    int puzzleHeight = this.getActivePuzzle().getHeight();
-    int puzzleWidth = this.getActivePuzzle().getWidth();
-    if (r < 0 || r >= puzzleHeight || c < 0 || c >= puzzleWidth) {
+  public void checkIndexInBounds(Coordinate c) {
+    int puzzleHeight = this.getPuzzle().getHeight();
+    int puzzleWidth = this.getPuzzle().getWidth();
+    if (c.row() < 0 || c.row() >= puzzleHeight || c.col() < 0 || c.col() >= puzzleWidth) {
       throw new IndexOutOfBoundsException("Index is out of bounds of puzzle.");
     }
   }
 
   @Override
-  public void revealCell(int r, int c, boolean rootCell) {
-    checkIndexInBounds(r, c);
+  public void revealCell(Coordinate c, boolean rootCell) {
+    checkIndexInBounds(c);
     if (isNewPuzzle) {
-      newPuzzle(r, c);
+      newPuzzle(c);
       isNewPuzzle = false;
     }
     if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
       return;
     }
-    if (cellStateMap[r][c] == CellState.HIDE) {
-      cellStateMap[r][c] = CellState.SHOW;
-      if (this.isMine(r, c) && rootCell) {
+    if (cellStateMap.isHide(c)) {
+      cellStateMap.setCellState(c, CellState.SHOW);
+      if (this.isMine(c) && rootCell) {
         revealAllMines();
-        setExplodedMine(r, c);
+        setExplodedMine(c);
         setGameState(GameState.LOSE);
-      } else if (!this.isMine(r, c)) {
+      } else if (!this.isMine(c)) {
         revealGoal--;
       }
-      Puzzle activePuzzle = this.getActivePuzzle();
-      if (activePuzzle.getCellType(r, c) == CellType.BLANK) {
-        this.revealBlankAlgorithm(r, c);
+      if (this.isBlank(c)) {
+        this.revealBlankAlgorithm(c);
       }
       this.updateGameState();
       if (rootCell) {
@@ -71,12 +72,12 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void revealBlankAlgorithm(int r, int c) {
-    for (int row = r - 1; row <= r + 1; row++) {
-      for (int col = c - 1; col <= c + 1; col++) {
-        if (row != r || col != c) {
+  public void revealBlankAlgorithm(Coordinate c) {
+    for (int row = c.row() - 1; row <= c.row() + 1; row++) {
+      for (int col = c.col() - 1; col <= c.col() + 1; col++) {
+        if (row != c.row() || col != c.col()) {
           try {
-            revealCell(row, col, false);
+            revealCell(c, false);
           } catch (IndexOutOfBoundsException ignored) {
           } catch (Exception e) {
             throw new RuntimeException("Blank reveal algorithm failure.");
@@ -88,40 +89,38 @@ public class ModelImpl implements Model {
 
   @Override
   public void revealAllMines() {
-    Puzzle activePuzzle = this.getActivePuzzle();
-    int puzzleHeight = activePuzzle.getHeight();
-    int puzzleWidth = activePuzzle.getWidth();
-    for (int r = 0; r < puzzleHeight; r++) {
-      for (int c = 0; c < puzzleWidth; c++) {
-        if (activePuzzle.getCellType(r, c) == CellType.MINE) {
-          this.revealCell(r, c, false);
+    for (int r = 0; r < this.getPuzzleHeight(); r++) {
+      for (int c = 0; c < this.getPuzzleWidth(); c++) {
+        Coordinate coordinate = new CoordinateImpl(r, c);
+        if (this.isMine(coordinate)) {
+          this.revealCell(coordinate, false);
         }
       }
     }
   }
 
   @Override
-  public void revealAdjacentCells(int r, int c) {
-    checkIndexInBounds(r, c);
-    if (!isClue(r, c)) {
-      throw new IllegalArgumentException("This cell is not a clue");
+  public void revealAdjacentCells(Coordinate c) {
+    checkIndexInBounds(c);
+    if (!isClue(c)) {
+      throw new IllegalArgumentException("Provided cell is not a clue.");
     }
     // Check if flags satisfy clue.
     int flagCount = 0;
-    for (int row = r - 1; row <= r + 1; row++) {
-      for (int col = c - 1; col <= c + 1; col++) {
+    for (int row = c.row() - 1; row <= c.row() + 1; row++) {
+      for (int col = c.col() - 1; col <= c.col() + 1; col++) {
         if (row >= 0 && row < puzzle.getHeight() && col >= 0 && col < puzzle.getWidth()) {
-          if (isFlag(row, col)) {
+          if (this.isFlag(c)) {
             flagCount++;
           }
         }
       }
     }
-    if (flagCount == puzzle.getClue(r, c)) {
-      for (int row = r - 1; row <= r + 1; row++) {
-        for (int col = c - 1; col <= c + 1; col++) {
+    if (flagCount == this.getClue(c)) {
+      for (int row = c.row() - 1; row <= c.row() + 1; row++) {
+        for (int col = c.col() - 1; col <= c.col() + 1; col++) {
           if (row >= 0 && row < puzzle.getHeight() && col >= 0 && col < puzzle.getWidth()) {
-            revealCell(row, col, true);
+            revealCell(new CoordinateImpl(row, col), true);
           }
         }
       }
@@ -129,37 +128,37 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void addFlag(int r, int c) {
-    checkIndexInBounds(r, c);
+  public void addFlag(Coordinate c) {
+    checkIndexInBounds(c);
     if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
       return;
     }
-    if (this.getCellState(r, c) == CellState.HIDE) {
-      cellStateMap[r][c] = CellState.FLAG;
+    if (cellStateMap.isHide(c)) {
+      cellStateMap.setCellState(c, CellState.FLAG);
       notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
 
   @Override
-  public void removeFlag(int r, int c) {
-    checkIndexInBounds(r, c);
+  public void removeFlag(Coordinate c) {
+    checkIndexInBounds(c);
     if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
       return;
     }
-    if (this.isFlag(r, c)) {
-      cellStateMap[r][c] = CellState.HIDE;
+    if (cellStateMap.isFlag(c)) {
+      cellStateMap.setCellState(c, CellState.HIDE);
       notify(this, RenderType.CHANGE_CELL_STATE);
     }
   }
 
   @Override
-  public void newPuzzle(int row, int col) {
-    puzzle = puzzleGenerator.generateRandomPuzzle(new CoordinateImpl(row, col));
+  public void newPuzzle(Coordinate c) {
+    puzzle = puzzleGenerator.generateRandomPuzzle(c);
     resetPuzzle(RenderType.NEW_PUZZLE);
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
   }
-  
+
   @Override
   public void newPuzzle(PuzzleDifficulty puzzleDifficulty) {
     this.puzzleDifficulty = puzzleDifficulty;
@@ -168,7 +167,7 @@ public class ModelImpl implements Model {
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
   }
-  
+
   @Override
   public void newPuzzle() {
     puzzle = puzzleGenerator.generateRandomPuzzle(new CoordinateImpl(0, 0));
@@ -190,31 +189,27 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public boolean isFlag(int r, int c) {
-    checkIndexInBounds(r, c);
-    return this.getCellState(r, c) == CellState.FLAG;
+  public boolean isMine(Coordinate c) {
+    checkIndexInBounds(c);
+    return getPuzzle().isMine(c);
   }
 
   @Override
-  public boolean isMine(int r, int c) {
-    checkIndexInBounds(r, c);
-    return getActivePuzzle().getCellType(r, c) == CellType.MINE;
+  public boolean isClue(Coordinate c) {
+    checkIndexInBounds(c);
+    return getPuzzle().isClue(c);
   }
 
   @Override
-  public boolean isClue(int r, int c) {
-    checkIndexInBounds(r, c);
-    return getActivePuzzle().getCellType(r, c) == CellType.CLUE;
+  public int getClue(Coordinate c) {
+    if (!isClue(c)) {
+      throw new IllegalArgumentException("Cell is not CLUE.");
+    }
+    return getPuzzle().getClue(c);
   }
 
   @Override
-  public CellState getCellState(int r, int c) {
-    checkIndexInBounds(r, c);
-    return cellStateMap[r][c];
-  }
-
-  @Override
-  public Puzzle getActivePuzzle() {
+  public Puzzle getPuzzle() {
     return puzzle;
   }
 
@@ -223,15 +218,8 @@ public class ModelImpl implements Model {
     revealGoal = 0;
     int puzzleHeight = puzzleGenerator.getHeight();
     int puzzleWidth = puzzleGenerator.getWidth();
-    cellStateMap = new CellState[puzzleHeight][puzzleWidth];
-    for (int r = 0; r < puzzleHeight; r++) {
-      for (int c = 0; c < puzzleWidth; c++) {
-        cellStateMap[r][c] = CellState.HIDE;
-        if (!this.isMine(r, c)) {
-          revealGoal++;
-        }
-      }
-    }
+    cellStateMap.newCellStateMap(puzzleHeight, puzzleWidth);
+    revealGoal = puzzleHeight * puzzleWidth - puzzleGenerator.getMineCount();
     this.setGameState(GameState.PLAYING);
     notify(this, renderType);
   }
@@ -277,19 +265,55 @@ public class ModelImpl implements Model {
   public Coordinate getExplodedMine() {
     return explodedMine;
   }
-  
-  public void setExplodedMine(int row, int col) {
-    this.explodedMine = new CoordinateImpl(row, col);
+
+  public void setExplodedMine(Coordinate c) {
+    this.explodedMine = c;
   }
-  
+
   @Override
   public void setPuzzleParameters(int height, int width, int mineCount) {
     puzzleGenerator.setPuzzleParameters(height, width, mineCount);
     this.newPuzzle();
   }
-  
+
+  @Override
+  public int getPuzzleHeight() {
+    return getPuzzle().getHeight();
+  }
+
+  @Override
+  public int getPuzzleWidth() {
+    return getPuzzle().getWidth();
+  }
+
   @Override
   public int getMineCount() {
     return puzzleGenerator.getMineCount();
+  }
+
+  @Override
+  public boolean isBlank(Coordinate c) {
+    checkIndexInBounds(c);
+    return getPuzzle().isBlank(c);
+  }
+
+  @Override
+  public CellState getCellState(Coordinate c) {
+    return cellStateMap.getCellState(c);
+  }
+
+  @Override
+  public boolean isHide(Coordinate c) {
+    return cellStateMap.getCellState(c) == CellState.HIDE;
+  }
+
+  @Override
+  public boolean isFlag(Coordinate c) {
+    return cellStateMap.getCellState(c) == CellState.FLAG;
+  }
+
+  @Override
+  public boolean isShow(Coordinate c) {
+    return cellStateMap.getCellState(c) == CellState.SHOW;
   }
 }

@@ -26,15 +26,15 @@ public class Clue implements FXComponent {
     StackPane background = new StackPane();
     background.getStyleClass().add("cell");
 
-    int puzzleHeight = model.getActivePuzzle().getHeight();
-    int puzzleWidth = model.getActivePuzzle().getWidth();
+    int puzzleHeight = model.getPuzzle().getHeight();
+    int puzzleWidth = model.getPuzzle().getWidth();
     double cellSize = Math.min(MaxScreenHeight / puzzleHeight, MaxScreenWidth / puzzleWidth);
     cellSize -= gridGap + gridGap / Math.min(puzzleHeight, puzzleWidth);
 
     background.setMinSize(cellSize, cellSize);
     background.setMaxSize(cellSize, cellSize);
 
-    int clueNumber = model.getActivePuzzle().getClue(row, col);
+    int clueNumber = model.getClue(row, col);
     Label clueLabel = new Label(String.valueOf(clueNumber));
     background.setStyle("-fx-font-size: " + (cellSize / 2));
     switch (clueNumber) {

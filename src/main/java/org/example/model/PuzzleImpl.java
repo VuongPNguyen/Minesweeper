@@ -27,9 +27,9 @@ public class PuzzleImpl implements Puzzle {
   }
 
   @Override
-  public CellType getCellType(int r, int c) {
-    this.checkIndexInBounds(r, c);
-    int cellValue = board[r][c];
+  public CellType getCellType(Coordinate c) {
+    this.checkIndexInBounds(c.row(), c.col());
+    int cellValue = board[c.row()][c.col()];
     if (cellValue == 0) {
       return CellType.BLANK;
     } else if (cellValue == 9) {
@@ -42,11 +42,26 @@ public class PuzzleImpl implements Puzzle {
   }
 
   @Override
-  public int getClue(int r, int c) {
-    this.checkIndexInBounds(r, c);
-    if (this.getCellType(r, c) != CellType.CLUE) {
+  public boolean isBlank(Coordinate c) {
+    return getCellType(c) == CellType.BLANK;
+  }
+
+  @Override
+  public boolean isClue(Coordinate c) {
+    return getCellType(c) == CellType.CLUE;
+  }
+
+  @Override
+  public boolean isMine(Coordinate c) {
+    return getCellType(c) == CellType.MINE;
+  }
+
+  @Override
+  public int getClue(Coordinate c) {
+    this.checkIndexInBounds(c.row(), c.col());
+    if (this.getCellType(c) != CellType.CLUE) {
       throw new IllegalArgumentException("CellType is not CLUE");
     }
-    return board[r][c];
+    return board[c.row()][c.col()];
   }
 }
