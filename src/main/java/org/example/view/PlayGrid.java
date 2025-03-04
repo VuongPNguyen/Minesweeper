@@ -1,11 +1,11 @@
 package org.example.view;
 
+import static org.example.view.ViewConstants.*;
+
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import org.example.controller.Controller;
 import org.example.model.*;
-
-import static org.example.view.ViewConstants.*;
 
 public class PlayGrid implements FXComponent {
   private final Model model;
@@ -27,34 +27,36 @@ public class PlayGrid implements FXComponent {
     Mine mine = new Mine(model);
     ExplodedMine explodedMine = new ExplodedMine(model);
     WrongFlag wrongFlag = new WrongFlag(model);
-    
+
     for (int row = 0; row < activePuzzle.getHeight(); row++) {
       for (int col = 0; col < activePuzzle.getWidth(); col++) {
-        Coordinate coordinate = new CoordinateImpl(row, col);
-        if (model.isHide(coordinate)) {
-          Hide hide = new Hide(model, controller, row, col);
-          grid.add(hide.render(), col, row);
-        } else if (model.isFlag(coordinate)) {
-          if (model.getGameState() == GameState.LOSE && !model.isMine(row, col) && model.isFlag(coordinate)) {
-            grid.add(wrongFlag.render(), col, row);
+        Coordinate coord = new CoordinateImpl(row, col);
+        if (model.isHide(coord)) {
+          Hide hide = new Hide(model, controller, coord);
+          grid.add(hide.render(), coord.col(), coord.row());
+        } else if (model.isFlag(coord)) {
+          if (model.getGameState() == GameState.LOSE
+              && !model.isMine(coord)
+              && model.isFlag(coord)) {
+            grid.add(wrongFlag.render(), coord.col(), coord.row());
           } else {
-            Flag flag = new Flag(model, controller, row, col);
-            grid.add(flag.render(), col, row);
+            Flag flag = new Flag(model, controller, coord);
+            grid.add(flag.render(), coord.col(), coord.row());
           }
-        } else if (model.isShow(coordinate)) {
-          if (activePuzzle.getCellType(row, col) == CellType.MINE) {
+        } else if (model.isShow(coord)) {
+          if (model.isMine(coord)) {
             Coordinate trippedMine = model.getExplodedMine();
             if (trippedMine.row() == row && trippedMine.col() == col) {
-              grid.add(explodedMine.render(), col, row);
+              grid.add(explodedMine.render(), coord.col(), coord.row());
             } else {
-              grid.add(mine.render(), col, row);
+              grid.add(mine.render(), coord.col(), coord.row());
             }
-          } else if (activePuzzle.getCellType(row, col) == CellType.BLANK) {
+          } else if (model.isBlank(coord)) {
             Blank blank = new Blank(model);
-            grid.add(blank.render(), col, row);
-          } else if (activePuzzle.getCellType(row, col) == CellType.CLUE) {
-            Clue clue = new Clue(model, controller, row, col);
-            grid.add(clue.render(), col, row);
+            grid.add(blank.render(), coord.col(), coord.row());
+          } else if (model.isClue(coord)) {
+            Clue clue = new Clue(model, controller, coord);
+            grid.add(clue.render(), coord.col(), coord.row());
           }
         }
       }

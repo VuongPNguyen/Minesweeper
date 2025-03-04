@@ -8,18 +8,18 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import org.example.controller.Controller;
+import org.example.model.Coordinate;
 import org.example.model.Model;
 
 public class Flag implements FXComponent {
   private final Model model;
   private final Controller controller;
-  private final int row, col;
+  private final Coordinate coordinate;
 
-  public Flag(Model model, Controller controller, int row, int col) {
+  public Flag(Model model, Controller controller, Coordinate coordinate) {
     this.model = model;
     this.controller = controller;
-    this.row = row;
-    this.col = col;
+    this.coordinate = coordinate;
   }
 
   @Override
@@ -41,7 +41,7 @@ public class Flag implements FXComponent {
     background.setOnMouseClicked(
         e -> {
           if (e.getButton() == MouseButton.SECONDARY) {
-            controller.toggleFlagCell(row, col);
+            controller.toggleFlagCell(coordinate);
           }
         });
 

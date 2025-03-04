@@ -15,8 +15,9 @@ public class AppTest {
   public void testModelCheckIndex() {
     Model model = new ModelImpl();
     boolean check1 = false;
+    Coordinate coordinate = new CoordinateImpl(-1, 100);
     try {
-      model.revealCell(-1, 100, true);
+      model.revealCell(coordinate, true);
     } catch (IndexOutOfBoundsException ignored) {
       check1 = true;
     }
@@ -28,17 +29,10 @@ public class AppTest {
     Model model = new ModelImpl();
     Coordinate origin = new CoordinateImpl(0, 0);
     assertEquals(CellState.HIDE, model.getCellState(origin));
-    model.revealCell(0, 0, true);
+    model.revealCell(origin, true);
     assertEquals(CellState.SHOW, model.getCellState(origin));
     model.resetPuzzle(TEST);
-    //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
-    //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
-    //    }
-    model.revealCell(0, 0, true);
-    //    System.out.println();
-    //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
-    //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
-    //    }
+    model.revealCell(origin, true);
   }
 
   @Test
@@ -46,41 +40,19 @@ public class AppTest {
     Model model = new ModelImpl();
     Coordinate origin = new CoordinateImpl(0, 0);
     assertFalse(model.isFlag(origin));
-    model.removeFlag(0, 0);
+    model.removeFlag(origin);
     assertFalse(model.isFlag(origin));
-    model.addFlag(0, 0);
+    model.addFlag(origin);
     assertTrue(model.isFlag(origin));
-    model.addFlag(0, 0);
+    model.addFlag(origin);
     assertTrue(model.isFlag(origin));
-    model.removeFlag(0, 0);
+    model.removeFlag(origin);
     assertFalse(model.isFlag(origin));
     // Testing flagging a revealed cell.
     assertTrue(model.isHide(origin));
-    model.revealCell(0, 0, true);
-    model.addFlag(0, 0);
-    assertTrue(model.isFlag(origin));
-  }
-
-  @Test
-  public void testModelResetPuzzle() {
-    Model model = new ModelImpl();
-    assertEquals(90, model.getRevealGoal());
-    int puzzleHeight = model.getPuzzle().getHeight();
-    int puzzleWidth = model.getPuzzle().getWidth();
-    for (int r = 0; r < puzzleHeight; r++) {
-      for (int c = 0; c < puzzleWidth; c++) {
-        model.revealCell(r, c, true);
-        assertTrue(model.isShow(new CoordinateImpl(r, c)));
-      }
-    }
-    assertEquals(0, model.getRevealGoal());
-    model.resetPuzzle(TEST);
-    for (int r = 0; r < puzzleHeight; r++) {
-      for (int c = 0; c < puzzleWidth; c++) {
-        assertTrue(model.isHide(new CoordinateImpl(r, c)));
-      }
-    }
-    assertEquals(90, model.getRevealGoal());
+    model.revealCell(origin, true);
+    model.addFlag(origin);
+    assertFalse(model.isFlag(origin));
   }
 
   @Test

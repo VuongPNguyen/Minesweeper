@@ -32,8 +32,8 @@ public class ModelImpl implements Model {
   }
 
   public void checkIndexInBounds(Coordinate c) {
-    int puzzleHeight = this.getPuzzle().getHeight();
-    int puzzleWidth = this.getPuzzle().getWidth();
+    int puzzleHeight = this.getPuzzleHeight();
+    int puzzleWidth = this.getPuzzleWidth();
     if (c.row() < 0 || c.row() >= puzzleHeight || c.col() < 0 || c.col() >= puzzleWidth) {
       throw new IndexOutOfBoundsException("Index is out of bounds of puzzle.");
     }
@@ -76,8 +76,9 @@ public class ModelImpl implements Model {
     for (int row = c.row() - 1; row <= c.row() + 1; row++) {
       for (int col = c.col() - 1; col <= c.col() + 1; col++) {
         if (row != c.row() || col != c.col()) {
+          Coordinate nextCell = new CoordinateImpl(row, col);
           try {
-            revealCell(c, false);
+            revealCell(nextCell, false);
           } catch (IndexOutOfBoundsException ignored) {
           } catch (Exception e) {
             throw new RuntimeException("Blank reveal algorithm failure.");
@@ -110,7 +111,7 @@ public class ModelImpl implements Model {
     for (int row = c.row() - 1; row <= c.row() + 1; row++) {
       for (int col = c.col() - 1; col <= c.col() + 1; col++) {
         if (row >= 0 && row < puzzle.getHeight() && col >= 0 && col < puzzle.getWidth()) {
-          if (this.isFlag(c)) {
+          if (this.isFlag(new CoordinateImpl(row, col))) {
             flagCount++;
           }
         }
@@ -119,7 +120,7 @@ public class ModelImpl implements Model {
     if (flagCount == this.getClue(c)) {
       for (int row = c.row() - 1; row <= c.row() + 1; row++) {
         for (int col = c.col() - 1; col <= c.col() + 1; col++) {
-          if (row >= 0 && row < puzzle.getHeight() && col >= 0 && col < puzzle.getWidth()) {
+          if (row >= 0 && row < this.getPuzzleHeight() && col >= 0 && col < this.getPuzzleWidth()) {
             revealCell(new CoordinateImpl(row, col), true);
           }
         }

@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.model.CoordinateImpl;
+import org.example.model.Coordinate;
 import org.example.model.Model;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 import org.example.model.RenderType;
@@ -35,21 +35,21 @@ public class ControllerImpl implements Controller {
   }
 
   @Override
-  public void clickCell(int r, int c) {
-    model.revealCell(r, c, true);
+  public void clickCell(Coordinate c) {
+    model.revealCell(c, true);
   }
   
   @Override
-  public void revealAdjacentCells(int r, int c) {
-    model.revealAdjacentCells(r, c);
+  public void revealAdjacentCells(Coordinate c) {
+    model.revealAdjacentCells(c);
   }
   
   @Override
-  public void toggleFlagCell(int r, int c) {
-    if (model.isFlag(new CoordinateImpl(r, c))) {
-      model.removeFlag(r, c);
+  public void toggleFlagCell(Coordinate c) {
+    if (model.isFlag(c)) {
+      model.removeFlag(c);
     } else {
-      model.addFlag(r, c);
+      model.addFlag(c);
     }
   }
   
