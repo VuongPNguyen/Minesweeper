@@ -3,7 +3,6 @@ package org.example.controller;
 import org.example.model.Coordinate;
 import org.example.model.Model;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
-import org.example.model.RenderType;
 
 public class ControllerImpl implements Controller {
   private final Model model;

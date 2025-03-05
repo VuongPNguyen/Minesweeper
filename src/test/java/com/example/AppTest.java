@@ -1,7 +1,6 @@
 package com.example;
 
 import static org.example.model.PuzzleGenerator.PuzzleDifficulty.*;
-import static org.example.model.RenderType.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
@@ -31,7 +30,7 @@ public class AppTest {
     assertEquals(CellState.HIDE, model.getCellState(origin));
     model.revealCell(origin, true);
     assertEquals(CellState.SHOW, model.getCellState(origin));
-    model.resetPuzzle(TEST);
+    model.resetPuzzle();
     model.revealCell(origin, true);
   }
 
