@@ -177,7 +177,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
   public boolean checkSafeCellAdjacency(int row, int col) {
     for (int r = getSafeCell().row() - 1; r <= getSafeCell().row() + 1; r++) {
       for (int c = getSafeCell().col() - 1; c <= getSafeCell().col() + 1; c++) {
-        if (r >= 0 && r < board.length && c >= 0 && c < board[0].length) {
+        if (isInBounds(r, c)) {
           if (r == row && c == col) {
             return true;
           }
