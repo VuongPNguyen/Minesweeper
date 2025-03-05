@@ -56,6 +56,9 @@ public interface PuzzleGenerator {
 
   /** Returns true if current cell is adjacent to safe cell. */
   boolean checkSafeCellAdjacency(int row, int col);
+
+  /** Returns true if given cell is within the bounds of the puzzle. */
+  boolean isInBounds(int row, int col);
   
   /** Setter method for puzzleHeight, puzzleWidth, and mineCount parameters. */
   void setPuzzleParameters(int height, int width, int mineCount);

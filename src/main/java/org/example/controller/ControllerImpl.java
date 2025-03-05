@@ -31,7 +31,7 @@ public class ControllerImpl implements Controller {
   
   @Override
   public void clickResetPuzzle() {
-    model.resetPuzzle(RenderType.CHANGE_CELL_STATE);
+    model.resetPuzzle();
   }
 
   @Override

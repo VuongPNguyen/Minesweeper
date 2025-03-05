@@ -8,12 +8,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.example.controller.Controller;
+import org.example.model.Model;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
 
 public class PuzzleControlPanel implements FXComponent {
   private final Controller controller;
+  private final Model model;
 
-  public PuzzleControlPanel(Controller controller) {
+  public PuzzleControlPanel(Model model, Controller controller) {
+    this.model = model;
     this.controller = controller;
   }
 
@@ -26,7 +29,7 @@ public class PuzzleControlPanel implements FXComponent {
         FXCollections.observableArrayList(
             PuzzleDifficulty.EASY, PuzzleDifficulty.MEDIUM, PuzzleDifficulty.HARD, PuzzleDifficulty.CUSTOM);
     ComboBox<PuzzleDifficulty> difficultyComboBox = new ComboBox<>(puzzleDifficultiesList);
-    difficultyComboBox.setValue(PuzzleDifficulty.MEDIUM);
+    difficultyComboBox.setValue(model.getPuzzleDifficulty());
     difficultyComboBox.setOnAction(_ -> controller.setDifficulty(difficultyComboBox.getValue()));
     
     Button resetButton = new Button("Reset Puzzle");

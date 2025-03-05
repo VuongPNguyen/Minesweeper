@@ -33,30 +33,29 @@ public class PlayGrid implements FXComponent {
         Coordinate coord = new CoordinateImpl(row, col);
         if (model.isHide(coord)) {
           Hide hide = new Hide(model, controller, coord);
-          grid.add(hide.render(), coord.col(), coord.row());
+          grid.add(hide.render(), col, row);
         } else if (model.isFlag(coord)) {
           if (model.getGameState() == GameState.LOSE
-              && !model.isMine(coord)
-              && model.isFlag(coord)) {
-            grid.add(wrongFlag.render(), coord.col(), coord.row());
+              && !model.isMine(coord)) {
+            grid.add(wrongFlag.render(), col, row);
           } else {
             Flag flag = new Flag(model, controller, coord);
-            grid.add(flag.render(), coord.col(), coord.row());
+            grid.add(flag.render(), col, row);
           }
         } else if (model.isShow(coord)) {
           if (model.isMine(coord)) {
             Coordinate trippedMine = model.getExplodedMine();
             if (trippedMine.row() == row && trippedMine.col() == col) {
-              grid.add(explodedMine.render(), coord.col(), coord.row());
+              grid.add(explodedMine.render(), col, row);
             } else {
-              grid.add(mine.render(), coord.col(), coord.row());
+              grid.add(mine.render(), col, row);
             }
           } else if (model.isBlank(coord)) {
             Blank blank = new Blank(model);
-            grid.add(blank.render(), coord.col(), coord.row());
+            grid.add(blank.render(), col, row);
           } else if (model.isClue(coord)) {
             Clue clue = new Clue(model, controller, coord);
-            grid.add(clue.render(), coord.col(), coord.row());
+            grid.add(clue.render(), col, row);
           }
         }
       }

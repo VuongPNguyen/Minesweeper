@@ -63,6 +63,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
   @Override
   public void placeMines() {
     Random random = new Random();
+    // Generate normally when mines can be easily placed outside safe zone.
     if (getMineCount() < boardHeight * boardWidth - 8) {
       for (int currentMines = 0; currentMines < getMineCount(); currentMines++) {
         int mineRow = random.nextInt(boardHeight);
@@ -87,7 +88,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
       int adjacentCells = 0;
       for (int r = getSafeCell().row() - 1; r <= getSafeCell().row() + 1; r++) {
         for (int c = getSafeCell().col() - 1; c <= getSafeCell().col() + 1; c++) {
-          if (r >= 0 && r < this.getHeight() && c >= 0 && c < this.getWidth()) {
+          if (isInBounds(r, c)) {
             if (r != getSafeCell().row() || c != getSafeCell().col()) {
               adjacentCells++;
             }
@@ -102,10 +103,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
         int mineRow = random.nextInt(safeCell.row() - 1, safeCell.row() + 2);
         int mineCol = random.nextInt(safeCell.col() - 1, safeCell.col() + 2);
 
-        while (mineRow < 0
-            || mineRow >= this.getHeight()
-            || mineCol < 0
-            || mineCol >= this.getWidth()
+        while (!isInBounds(mineRow, mineCol)
             || board[mineRow][mineCol] == 9
             || (mineRow == safeCell.row() && mineCol == safeCell.col())) {
           mineRow = random.nextInt(safeCell.row() - 1, safeCell.row() + 2);
@@ -133,7 +131,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
 
     for (int r = row - 1; r <= row + 1; r++) {
       for (int c = col - 1; c <= col + 1; c++) {
-        if (r >= 0 && r < boardHeight && c >= 0 && c < boardWidth) {
+        if (isInBounds(r, c)) {
           if (board[r][c] == 9) {
             mines++;
           }
@@ -166,7 +164,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
       case EASY -> setPuzzleParameters(8, 10, 10);
       case MEDIUM -> setPuzzleParameters(14, 18, 40);
       case HARD -> setPuzzleParameters(20, 24, 99);
-      case CUSTOM -> setPuzzleParameters(10, 10, 12);
+      case CUSTOM -> setPuzzleParameters(10, 10, 20);
     }
   }
 
@@ -187,6 +185,11 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
       }
     }
     return false;
+  }
+
+  @Override
+  public boolean isInBounds(int row, int col) {
+    return row >= 0 && row < getHeight() && col >= 0 && col < getWidth();
   }
 
   @Override

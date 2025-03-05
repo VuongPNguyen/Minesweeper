@@ -44,7 +44,7 @@ public interface Model {
   void setPuzzleDifficulty(PuzzleDifficulty puzzleDifficulty);
 
   /** Resets the active puzzle by removing all lamps which have been placed */
-  void resetPuzzle(RenderType renderType);
+  void resetPuzzle();
 
   /** Returns true if the active puzzle is solved (i.e. every non-mine cell is revealed) */
   void updateGameState();

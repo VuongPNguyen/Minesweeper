@@ -24,12 +24,12 @@ public class View implements FXComponent, ModelObserver {
     this.stage = stage;
 
     // FXComponents
-    puzzleControlPanel = new PuzzleControlPanel(controller).render();
+    puzzleControlPanel = new PuzzleControlPanel(model, controller).render();
     puzzleArea = new StackPane();
   }
 
-  public void update(Model model, RenderType renderType) {
-    Scene scene = new Scene(this.render(renderType));
+  public void update(Model model) {
+    Scene scene = new Scene(this.render());
     scene.getStylesheets().add("main.css");
     stage.setScene(scene);
     stage.setMaximized(true);
@@ -37,21 +37,31 @@ public class View implements FXComponent, ModelObserver {
 
   @Override
   public Parent render() {
-    Pane vBox = new VBox();
-    vBox.getStyleClass().add("client");
-    vBox.setMaxHeight(MaxScreenHeight);
-    vBox.setMaxWidth(MaxScreenWidth);
-    vBox.setPrefSize(MaxScreenWidth, MaxScreenHeight);
-    
-    puzzleArea = new StackPane();
+    Pane client = new VBox();
+    client.getStyleClass().add("client");
+    client.setMaxHeight(MaxScreenHeight);
+    client.setMaxWidth(MaxScreenWidth);
+    client.setPrefSize(MaxScreenWidth, MaxScreenHeight);
+    client.setPrefHeight(screen.getHeight() - 20);
 
-    PlayGrid playGrid = new PlayGrid(model, controller);
-    puzzleArea.getChildren().add(playGrid.render());
+    PuzzleControlPanel pcp = new PuzzleControlPanel(model, controller);
+    CustomPuzzlePanel cpp = new CustomPuzzlePanel(model, controller);
 
-    vBox.getChildren().add(puzzleControlPanel);
-    vBox.getChildren().add(puzzleArea);
+    StackPane puzzleArea = new StackPane();
 
-    return vBox;
+    PlayGrid pg = new PlayGrid(model, controller);
+    puzzleArea.getChildren().add(pg.render());
+
+    GameEndPanel gameEndPanel = new GameEndPanel(model, controller);
+    if (model.getGameState() != GameState.PLAYING) {
+      puzzleArea.getChildren().add(gameEndPanel.render());
+    }
+
+    client.getChildren().add(pcp.render());
+    client.getChildren().add(cpp.render());
+    client.getChildren().add(puzzleArea);
+
+    return client;
   }
 
   public Parent render(RenderType renderType) {

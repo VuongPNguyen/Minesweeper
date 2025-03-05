@@ -24,7 +24,7 @@ public class ModelImpl implements Model {
     puzzleGenerator = new PuzzleGeneratorImpl(new CoordinateImpl(0, 0));
     puzzle = puzzleGenerator.generateRandomPuzzle(puzzleDifficulty);
     cellStateMap = new CellStateMapImpl(puzzle.getHeight(), puzzle.getWidth());
-    this.resetPuzzle(RenderType.NEW_PUZZLE);
+    this.resetPuzzle();
   }
 
   public ModelImpl() {
@@ -37,6 +37,13 @@ public class ModelImpl implements Model {
     if (c.row() < 0 || c.row() >= puzzleHeight || c.col() < 0 || c.col() >= puzzleWidth) {
       throw new IndexOutOfBoundsException("Index is out of bounds of puzzle.");
     }
+  }
+
+  private boolean isInBounds(Coordinate c) {
+    return c.row() >= 0
+        && c.row() < this.getPuzzleHeight()
+        && c.col() >= 0
+        && c.col() < this.getPuzzleWidth();
   }
 
   @Override
@@ -63,25 +70,24 @@ public class ModelImpl implements Model {
       }
       this.updateGameState();
       if (rootCell) {
-        notify(this, RenderType.CHANGE_CELL_STATE);
+        notify(this);
       }
       if (getGameState() == GameState.LOSE || getGameState() == GameState.WIN) {
-        notify(this, RenderType.END_GAME);
+        notify(this);
       }
     }
   }
 
   @Override
   public void revealBlankAlgorithm(Coordinate c) {
-    for (int row = c.row() - 1; row <= c.row() + 1; row++) {
-      for (int col = c.col() - 1; col <= c.col() + 1; col++) {
-        if (row != c.row() || col != c.col()) {
-          Coordinate nextCell = new CoordinateImpl(row, col);
-          try {
-            revealCell(nextCell, false);
-          } catch (IndexOutOfBoundsException ignored) {
-          } catch (Exception e) {
-            throw new RuntimeException("Blank reveal algorithm failure.");
+    if (this.isBlank(c)) {
+      for (int row = c.row() - 1; row <= c.row() + 1; row++) {
+        for (int col = c.col() - 1; col <= c.col() + 1; col++) {
+          if (row != c.row() || col != c.col()) {
+            Coordinate nextCell = new CoordinateImpl(row, col);
+            if (isInBounds(nextCell)) {
+              revealCell(nextCell, false);
+            }
           }
         }
       }
@@ -110,18 +116,18 @@ public class ModelImpl implements Model {
     int flagCount = 0;
     for (int row = c.row() - 1; row <= c.row() + 1; row++) {
       for (int col = c.col() - 1; col <= c.col() + 1; col++) {
-        if (row >= 0 && row < puzzle.getHeight() && col >= 0 && col < puzzle.getWidth()) {
-          if (this.isFlag(new CoordinateImpl(row, col))) {
-            flagCount++;
-          }
+        Coordinate nextCell = new CoordinateImpl(row, col);
+        if (this.isInBounds(nextCell) && this.isFlag(nextCell)) {
+          flagCount++;
         }
       }
     }
     if (flagCount == this.getClue(c)) {
       for (int row = c.row() - 1; row <= c.row() + 1; row++) {
         for (int col = c.col() - 1; col <= c.col() + 1; col++) {
-          if (row >= 0 && row < this.getPuzzleHeight() && col >= 0 && col < this.getPuzzleWidth()) {
-            revealCell(new CoordinateImpl(row, col), true);
+          Coordinate nextCell = new CoordinateImpl(row, col);
+          if (this.isInBounds(nextCell)) {
+            revealCell(nextCell, true);
           }
         }
       }
@@ -136,7 +142,7 @@ public class ModelImpl implements Model {
     }
     if (cellStateMap.isHide(c)) {
       cellStateMap.setCellState(c, CellState.FLAG);
-      notify(this, RenderType.CHANGE_CELL_STATE);
+      notify(this);
     }
   }
 
@@ -148,14 +154,14 @@ public class ModelImpl implements Model {
     }
     if (cellStateMap.isFlag(c)) {
       cellStateMap.setCellState(c, CellState.HIDE);
-      notify(this, RenderType.CHANGE_CELL_STATE);
+      notify(this);
     }
   }
 
   @Override
   public void newPuzzle(Coordinate c) {
     puzzle = puzzleGenerator.generateRandomPuzzle(c);
-    resetPuzzle(RenderType.NEW_PUZZLE);
+    resetPuzzle();
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
   }
@@ -164,7 +170,7 @@ public class ModelImpl implements Model {
   public void newPuzzle(PuzzleDifficulty puzzleDifficulty) {
     this.puzzleDifficulty = puzzleDifficulty;
     puzzle = puzzleGenerator.generateRandomPuzzle(getPuzzleDifficulty(), new CoordinateImpl(0, 0));
-    resetPuzzle(RenderType.NEW_PUZZLE);
+    resetPuzzle();
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
   }
@@ -172,7 +178,7 @@ public class ModelImpl implements Model {
   @Override
   public void newPuzzle() {
     puzzle = puzzleGenerator.generateRandomPuzzle(new CoordinateImpl(0, 0));
-    resetPuzzle(RenderType.NEW_PUZZLE);
+    resetPuzzle();
     isNewPuzzle = true;
     setGameState(GameState.PLAYING);
   }
@@ -215,14 +221,14 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void resetPuzzle(RenderType renderType) {
+  public void resetPuzzle() {
     revealGoal = 0;
     int puzzleHeight = puzzleGenerator.getHeight();
     int puzzleWidth = puzzleGenerator.getWidth();
     cellStateMap.newCellStateMap(puzzleHeight, puzzleWidth);
     revealGoal = puzzleHeight * puzzleWidth - puzzleGenerator.getMineCount();
     this.setGameState(GameState.PLAYING);
-    notify(this, renderType);
+    notify(this);
   }
 
   @Override
@@ -257,9 +263,9 @@ public class ModelImpl implements Model {
     modelObserverList.remove(observer);
   }
 
-  public void notify(Model model, RenderType renderType) {
+  public void notify(Model model) {
     for (ModelObserver o : modelObserverList) {
-      o.update(model, renderType);
+      o.update(model);
     }
   }
 
