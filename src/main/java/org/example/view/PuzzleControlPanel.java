@@ -5,8 +5,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import org.example.controller.Controller;
 import org.example.model.Model;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
@@ -37,10 +40,19 @@ public class PuzzleControlPanel implements FXComponent {
 
     Button randomPuzzleButton = new Button("New Puzzle");
     randomPuzzleButton.setOnMouseClicked(_ -> controller.clickNewPuzzle());
-    
+
+    Label spacer = new Label(" ");
+    Button controlsHelp = new Button("?");
+    Tooltip tt = new Tooltip();
+    tt.setGraphic(new ControlsMenu().render());
+    tt.setShowDelay(new Duration(0));
+    controlsHelp.setTooltip(tt);
+
     hBox.getChildren().add(difficultyComboBox);
     hBox.getChildren().add(resetButton);
     hBox.getChildren().add(randomPuzzleButton);
+    hBox.getChildren().add(spacer);
+    hBox.getChildren().add(controlsHelp);
 
     return hBox;
   }
