@@ -1,8 +1,8 @@
 package org.example.controller;
 
+import org.example.model.Coordinate;
 import org.example.model.Model;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
-import org.example.model.RenderType;
 
 public class ControllerImpl implements Controller {
   private final Model model;
@@ -22,23 +22,34 @@ public class ControllerImpl implements Controller {
       model.setPuzzleDifficulty(puzzleDifficulty);
     }
   }
-
+  
+  @Override
+  public void setPuzzleParameters(int height, int width, int mineCount) {
+    model.setPuzzleParameters(height, width, mineCount);
+  }
+  
   @Override
   public void clickResetPuzzle() {
-    model.resetPuzzle(RenderType.CHANGE_CELL_STATE);
+    model.resetPuzzle();
   }
 
   @Override
-  public void clickCell(int r, int c) {
-    model.revealCell(r, c, true);
+  public void clickCell(Coordinate c) {
+    model.revealCell(c, true);
   }
-
+  
   @Override
-  public void toggleFlagCell(int r, int c) {
-    if (model.isFlag(r, c)) {
-      model.removeFlag(r, c);
+  public void revealAdjacentCells(Coordinate c) {
+    model.revealAdjacentCells(c);
+  }
+  
+  @Override
+  public void toggleFlagCell(Coordinate c) {
+    if (model.isFlag(c)) {
+      model.removeFlag(c);
     } else {
-      model.addFlag(r, c);
+      model.addFlag(c);
     }
   }
+  
 }

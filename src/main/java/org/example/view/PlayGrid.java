@@ -1,9 +1,7 @@
 package org.example.view;
 
-import static org.example.view.ViewConstants.MaxScreenHeight;
-import static org.example.view.ViewConstants.gridGap;
+import static org.example.view.ViewConstants.*;
 
-import java.util.Arrays;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import org.example.controller.Controller;
@@ -23,36 +21,40 @@ public class PlayGrid implements FXComponent {
     GridPane grid = new GridPane();
     grid.getStyleClass().add("play-grid");
     grid.setMaxHeight(MaxScreenHeight);
+    grid.setMaxWidth(MaxScreenWidth - 50);
 
-    Puzzle activePuzzle = model.getActivePuzzle();
+    Puzzle activePuzzle = model.getPuzzle();
     Mine mine = new Mine(model);
     ExplodedMine explodedMine = new ExplodedMine(model);
     WrongFlag wrongFlag = new WrongFlag(model);
-    
+
     for (int row = 0; row < activePuzzle.getHeight(); row++) {
       for (int col = 0; col < activePuzzle.getWidth(); col++) {
-        if (model.getCellState(row, col) == CellState.HIDE) {
-          Hide hide = new Hide(model, controller, row, col);
+        Coordinate coord = new CoordinateImpl(row, col);
+        if (model.isHide(coord)) {
+          Hide hide = new Hide(model, controller, coord);
           grid.add(hide.render(), col, row);
-        } else if (model.getCellState(row, col) == CellState.FLAG) {
-          if (model.getGameState() == GameState.LOSE && !model.isMine(row, col) && model.isFlag(row, col)) {
+        } else if (model.isFlag(coord)) {
+          if (model.getGameState() == GameState.LOSE
+              && !model.isMine(coord)) {
             grid.add(wrongFlag.render(), col, row);
           } else {
-            Flag flag = new Flag(model, controller, row, col);
+            Flag flag = new Flag(model, controller, coord);
             grid.add(flag.render(), col, row);
           }
-        } else if (model.getCellState(row, col) == CellState.SHOW) {
-          if (activePuzzle.getCellType(row, col) == CellType.MINE) {
-            if (Arrays.equals(model.getExplodedMine(), new int[] {row, col})) {
+        } else if (model.isShow(coord)) {
+          if (model.isMine(coord)) {
+            Coordinate trippedMine = model.getExplodedMine();
+            if (trippedMine.row() == row && trippedMine.col() == col) {
               grid.add(explodedMine.render(), col, row);
             } else {
               grid.add(mine.render(), col, row);
             }
-          } else if (activePuzzle.getCellType(row, col) == CellType.BLANK) {
+          } else if (model.isBlank(coord)) {
             Blank blank = new Blank(model);
             grid.add(blank.render(), col, row);
-          } else if (activePuzzle.getCellType(row, col) == CellType.CLUE) {
-            Clue clue = new Clue(model, row, col);
+          } else if (model.isClue(coord)) {
+            Clue clue = new Clue(model, controller, coord);
             grid.add(clue.render(), col, row);
           }
         }

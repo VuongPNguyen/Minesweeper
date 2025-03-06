@@ -1,11 +1,20 @@
 package org.example.model;
 
 public interface PuzzleGenerator {
+  
   enum PuzzleDifficulty {
     EASY,
     MEDIUM,
-    HARD
+    HARD,
+    CUSTOM
   }
+
+  /**
+   * Generates a new Puzzle object based on the current difficulty parameter.
+   * Should generate such that the user is guaranteed safety on the first click.
+   */
+  Puzzle generateRandomPuzzle(Coordinate coordinate);
+
   /**
    * Generates a new Puzzle object based on the difficulty parameter.
    * Should generate such that the user is guaranteed safety on the first click.
@@ -14,10 +23,10 @@ public interface PuzzleGenerator {
   
   /**
    * Generates a new Puzzle object based on the difficulty parameter.
-   * Should generate a safe cell at the cell provided by row and col.
+   * Should generate a safe cell at the cell provided coordinate.
    */
-  Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty, int row, int col);
-
+  Puzzle generateRandomPuzzle(PuzzleDifficulty puzzleDifficulty, Coordinate safeCell);
+  
   /** Creates and assigns a new board to the instance variable to be modified. */
   void generateBlankBoard();
 
@@ -31,7 +40,7 @@ public interface PuzzleGenerator {
   int countAdjacentMines(int row, int col);
 
   /** Getter method for the coordinates of the safe cell. */
-  int[] getSafeCell();
+  Coordinate getSafeCell();
 
   /** Getter method for the board. */
   int[][] getBoard();
@@ -43,8 +52,23 @@ public interface PuzzleGenerator {
   void setPuzzleDifficulty(PuzzleDifficulty puzzleDifficulty);
 
   /** Setter method for the puzzle's safe cell. */
-  void setSafeCell(int row, int col);
+  void setSafeCell(Coordinate safeCell);
 
   /** Returns true if current cell is adjacent to safe cell. */
   boolean checkSafeCellAdjacency(int row, int col);
+
+  /** Returns true if given cell is within the bounds of the puzzle. */
+  boolean isInBounds(int row, int col);
+  
+  /** Setter method for puzzleHeight, puzzleWidth, and mineCount parameters. */
+  void setPuzzleParameters(int height, int width, int mineCount);
+  
+  /** Getter method for the puzzle's height */
+  int getHeight();
+  
+  /** Getter method for the puzzle's width */
+  int getWidth();
+  
+  /** Getter method for mineCount */
+  int getMineCount();
 }

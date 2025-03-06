@@ -1,12 +1,12 @@
 package com.example;
 
 import static org.example.model.PuzzleGenerator.PuzzleDifficulty.*;
-import static org.example.model.RenderType.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import org.example.model.*;
 import org.example.model.PuzzleGenerator.PuzzleDifficulty;
+import org.example.model.CellStateMap.CellState;
 import org.junit.Test;
 
 public class AppTest {
@@ -14,8 +14,9 @@ public class AppTest {
   public void testModelCheckIndex() {
     Model model = new ModelImpl();
     boolean check1 = false;
+    Coordinate coordinate = new CoordinateImpl(-1, 100);
     try {
-      model.revealCell(-1, 100, true);
+      model.revealCell(coordinate, true);
     } catch (IndexOutOfBoundsException ignored) {
       check1 = true;
     }
@@ -25,64 +26,37 @@ public class AppTest {
   @Test
   public void testModelRevealCell() {
     Model model = new ModelImpl();
-    assertEquals(CellState.HIDE, model.getCellState(0, 0));
-    model.revealCell(0, 0, true);
-    assertEquals(CellState.SHOW, model.getCellState(0, 0));
-    model.resetPuzzle(TEST);
-    //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
-    //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
-    //    }
-    model.revealCell(0, 0, true);
-    //    System.out.println();
-    //    for (int i = 0; i < model.getActivePuzzle().getHeight(); i++) {
-    //      System.out.println(Arrays.deepToString(model.getCellStateMap()[i]));
-    //    }
+    Coordinate origin = new CoordinateImpl(0, 0);
+    assertEquals(CellState.HIDE, model.getCellState(origin));
+    model.revealCell(origin, true);
+    assertEquals(CellState.SHOW, model.getCellState(origin));
+    model.resetPuzzle();
+    model.revealCell(origin, true);
   }
 
   @Test
   public void testModelFlags() {
     Model model = new ModelImpl();
-    assertFalse(model.isFlag(0, 0));
-    model.removeFlag(0, 0);
-    assertFalse(model.isFlag(0, 0));
-    model.addFlag(0, 0);
-    assertTrue(model.isFlag(0, 0));
-    model.addFlag(0, 0);
-    assertTrue(model.isFlag(0, 0));
-    model.removeFlag(0, 0);
-    assertFalse(model.isFlag(0, 0));
+    Coordinate origin = new CoordinateImpl(0, 0);
+    assertFalse(model.isFlag(origin));
+    model.removeFlag(origin);
+    assertFalse(model.isFlag(origin));
+    model.addFlag(origin);
+    assertTrue(model.isFlag(origin));
+    model.addFlag(origin);
+    assertTrue(model.isFlag(origin));
+    model.removeFlag(origin);
+    assertFalse(model.isFlag(origin));
     // Testing flagging a revealed cell.
-    assertEquals(CellState.HIDE, model.getCellState(0, 0));
-    model.revealCell(0, 0, true);
-    model.addFlag(0, 0);
-    assertEquals(CellState.SHOW, model.getCellState(0, 0));
-  }
-
-  @Test
-  public void testModelResetPuzzle() {
-    Model model = new ModelImpl();
-    assertEquals(90, model.getRevealGoal());
-    int puzzleHeight = model.getActivePuzzle().getHeight();
-    int puzzleWidth = model.getActivePuzzle().getWidth();
-    for (int r = 0; r < puzzleHeight; r++) {
-      for (int c = 0; c < puzzleWidth; c++) {
-        model.revealCell(r, c, true);
-        assertEquals(CellState.SHOW, model.getCellState(r, c));
-      }
-    }
-    assertEquals(0, model.getRevealGoal());
-    model.resetPuzzle(TEST);
-    for (int r = 0; r < puzzleHeight; r++) {
-      for (int c = 0; c < puzzleWidth; c++) {
-        assertEquals(CellState.HIDE, model.getCellState(r, c));
-      }
-    }
-    assertEquals(90, model.getRevealGoal());
+    assertTrue(model.isHide(origin));
+    model.revealCell(origin, true);
+    model.addFlag(origin);
+    assertFalse(model.isFlag(origin));
   }
 
   @Test
   public void testPuzzleGenerator() {
-    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new int[] {4, 4}, EASY);
+    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new CoordinateImpl(4, 4), EASY);
     puzzleGeneratorImpl.generateBlankBoard();
     for (int row = 0; row < puzzleGeneratorImpl.getBoard().length; row++) {
       for (int col = 0; col < puzzleGeneratorImpl.getBoard()[0].length; col++) {
@@ -93,7 +67,7 @@ public class AppTest {
 
   @Test
   public void testPuzzleGeneratorMinePlacement() {
-    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new int[] {0, 0}, EASY);
+    PuzzleGeneratorImpl puzzleGeneratorImpl = new PuzzleGeneratorImpl(new CoordinateImpl(0, 0), EASY);
 
     for (int i = 0; i < 10; i++) {
       puzzleGeneratorImpl.generateBlankBoard();
@@ -116,7 +90,7 @@ public class AppTest {
 
     for (int i = 0; i < 3; i++) {
       PuzzleGeneratorImpl puzzleGeneratorImpl =
-          new PuzzleGeneratorImpl(new int[] {4, 4}, difficulties[i]);
+          new PuzzleGeneratorImpl(new CoordinateImpl(4, 4), difficulties[i]);
       puzzleGeneratorImpl.generateBlankBoard();
       puzzleGeneratorImpl.placeMines();
       puzzleGeneratorImpl.placeClues();
