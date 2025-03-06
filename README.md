@@ -1,6 +1,14 @@
 # Minesweeper
 My rendition of Minesweeper using Java and JavaFX.
 
+Patch 3.1.0 (3/5/2025)
+
+- Added quality of life changes:
+  - Added control guide in the UI.
+  - Added limiters to width and mine count for custom puzzles.
+  - Updated puzzle generation for custom puzzles such that there can ba a minimum of 1 safe cell.
+- Refactored code with more classes.
+
 Patch 3.0.0 (3/1/2025)
 
 - Implemented a new puzzle generation algorithm.
